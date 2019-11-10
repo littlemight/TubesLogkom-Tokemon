@@ -314,12 +314,10 @@ specialAttack :-
     tokemon(Enemy,_,_,HP,_),
     printSpecialAttackMessage(TokemonP, Jurus),
     HPnew is HP - AtkAtribut,
-    (
-        HPnew =< 0 ->
-        
+ 
     printSpecialAttackMessage(TokemonP, Jurus),
     HPnew is HP - AtkAtribut,
-        HPnew =< 0 ->
+    (
         write('Musuh kalah.'),
         nl,
         write('Tangkep ga?'),
@@ -328,12 +326,12 @@ specialAttack :-
         retract(encounter(Enemy)),
         (
             special(Enemy) ->
-            retract(special(Enemy))
+            retract(special(Enemy));
+            !
         ),
         retract(special(TokemonP))
         ; retract(tokemon(Enemy,X,Y,_,Owner)),
         assertz(tokemon(Enemy,X,Y,HPnew,Owner)),
-    
         write('Musuh kena Special Attack')
     ).
 % END OF PLAYER
@@ -369,7 +367,8 @@ enemyAttack :-
             printInventory,
             (
                 special(TokemonP) ->
-                retract(special(TokemonP))
+                retract(special(TokemonP));
+                !
             )
         ; retract(tokemon(TokemonP,X,Y,_,Owner)),
         assertz(tokemon(TokemonP,X,Y,HPnew,Owner)),
@@ -408,7 +407,8 @@ enemySpecialAttack :-
             printInventory,
             (
                 special(TokemonP) ->
-                retract(special(TokemonP))
+                retract(special(TokemonP));
+                !
             )
         ; retract(tokemon(TokemonP,X,Y,_,Owner)),
         assertz(tokemon(TokemonP,X,Y,HPnew,Owner)),
@@ -419,9 +419,9 @@ enemySpecialAttack :-
 % RNG BEHAVIOUR 
 decideBattle :-
     random(1, 101, RNG),
-    (RNG =< 75 ->
+    (RNG =< 25 ->
         enemySpecialAttack
-    ;   specialAttack
+    ;   enemyAttack
     ).
 % END OF RNG BEHAVIOUR
 /* END OF TOKEMON BATTLE BEHAVIOUR */
