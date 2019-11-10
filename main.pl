@@ -3,7 +3,13 @@
 :- include('tokemon.pl').
 :- include('player.pl').
 
+/* STATUS : KONDISI PERMAINAN */
+status(idle).
+
+start :- \+status(idle), write('waduh sori ga bisa nih gan'),!, fail.
 start :-
+    retract(status(idle)),
+    asserta(status(roam)),
     initMap,
     random(1, 3, N),
     initNormal(N),

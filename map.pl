@@ -51,7 +51,7 @@ map :-
   !
   .
 
-w :- encounter(_), write('waduh sori ga bisa nih gan'), nl, !.
+w :- \+status(roam), write('waduh sori ga bisa nih gan'),!, fail.
 w :-
   retract(posPlayer(X, Y)),
   YNew is Y - 1,
@@ -65,7 +65,7 @@ w :-
   checkEncounter
   .
 
-
+a :- \+status(roam),  write('waduh sori ga bisa nih gan'),!, fail.
 a :-
   retract(posPlayer(X, Y)),
   XNew is X - 1,
@@ -79,6 +79,7 @@ a :-
   checkEncounter
   .
 
+s :- \+status(roam), write('waduh sori ga bisa nih gan'),!, fail.
 s :-
   retract(posPlayer(X, Y)),
   height(YMax),
@@ -93,6 +94,7 @@ s :-
   checkEncounter 
   .
 
+d :- \+status(roam), write('waduh sori ga bisa nih gan'),!, fail.
 d :-
   retract(posPlayer(X, Y)),
   width(XMax),

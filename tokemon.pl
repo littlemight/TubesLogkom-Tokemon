@@ -226,6 +226,7 @@ printStatus([Tokemon|Tail]) :-
     nl,
     printStatus(Tail).
 
+attack :- \+status(battle), write('waduh sori ga bisa nih gan'),!, fail.
 attack :-
     battle(TokemonP),
     encounter(Enemy),
@@ -256,6 +257,7 @@ attack :-
         write('Musuh kena damage')
     ).
 
+specialAttack :- \+status(battle), write('waduh sori ga bisa nih gan'),!, fail.
 specialAttack :-
     battle(TokemonP),
     encounter(Enemy),
