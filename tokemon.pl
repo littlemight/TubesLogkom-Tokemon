@@ -206,7 +206,7 @@ dTokemon(Tokemon) :-
     !.
 /* END OF TOKEMON MOVEMENTS */
 
-/* OUTPUT TOKE STATS */
+/* TOKEMON OUTPUTS  */
 status :-
     findall(Tokemon, tokemon(Tokemon,_,_,_,1), ListTokemon),
     write('Tokemon kamu : '),
@@ -228,10 +228,13 @@ printStatus([Tokemon|Tail]) :-
     nl,
     nl,
     printStatus(Tail).
-/* END OF OUTPUT TOKE STATS */
+
+printSpecialMessage(TokemonP, Jurus) :- format('~w used ~w!', [TokemonP, Jurus]).
+/* END OF TOKEMON OUTPUTS */
 
 /* TOKEMON BATTLE BEHAVIOUR */
 % PLAYER
+attack :- \+status(battle), write('waduh sori ga bisa nih gan'),!, fail.
 attack :-
     battle(TokemonP),
     encounter(Enemy),
@@ -262,6 +265,7 @@ attack :-
         write('Musuh kena damage')
     ).
 
+specialAttack :- \+status(battle), write('waduh sori ga bisa nih gan'),!, fail.
 specialAttack :-
     battle(TokemonP),
     encounter(Enemy),
@@ -279,6 +283,7 @@ specialAttack :-
         AtkAtribut is Atk
     ),
     tokemon(Enemy,_,_,HP,_),
+    printSpecialMessage(TokemonP, Jurus),
     HPnew is HP - AtkAtribut,
     (
         HPnew =< 0 ->
@@ -326,9 +331,46 @@ enemyAttack :-
         assertz(tokemon(TokemonP,X,Y,HPnew,Owner)),
         write('Kita kena damage')
     ).
+enemySpecialAttack :-
+    battle(TokemonP),
+    encounter(Enemy),
+    (
+        type(Enemy,fire),type(TokemonP,leaves) ->
+            skill(Enemy,Jurus,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(Enemy,leaves),type(TokemonP,water) ->
+            skill(Enemy,Jurus,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(Enemy,water),type(TokemonP,water) ->
+            skill(Enemy,Jurus,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; skill(Enemy,Jurus,Atk),
+        AtkAtribut is Atk
+    ),
+    tokemon(TokemonP,_,_,HP,_),
+    printSpecialMessage(TokemonP, Jurus),
+    HPnew is HP - AtkAtribut,
+    (
+        HPnew =< 0 ->
+            write('Tokemon kita kalah.'),
+            nl,
+            write('Pilih Tokemon lagi'),
+            nl,
+            retract(tokemon(TokemonP,_,_,_,_)),
+            retract(inventory(TokemonP)),
+            printInventory
+        ; retract(tokemon(TokemonP,X,Y,_,Owner)),
+        assertz(tokemon(TokemonP,X,Y,HPnew,Owner)),
+        write('Kita kena damage')
+    ).
 % END OF ENEMY
 
 % RNG BEHAVIOUR 
-
+decideBattle :-
+    random(1, 101, RNG),
+    (RNG =< 75 ->
+        enemySpecialAttack
+    ;   specialAttack
+    ).
 % END OF RNG BEHAVIOUR
 /* END OF TOKEMON BATTLE BEHAVIOUR */

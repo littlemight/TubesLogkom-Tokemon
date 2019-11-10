@@ -10,4 +10,5 @@ reset :-
     retractall(width(_)),
     retractall(gym(_, _)),
     retractall(fence(_, _)),
-    retractall(posPlayer(_, _)).
+    retractall(posPlayer(_, _)),
+    retractall(status(_)).
