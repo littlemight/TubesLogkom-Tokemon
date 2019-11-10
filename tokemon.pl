@@ -10,7 +10,9 @@
 /* normal(NamaTokemon) */
 /* damage(NamaTokemon, JumlahDamage) */
 /* skill(NamaTokemon,NamaSkill,JumlahDamage) */
+/* special(NamaTokemon)*/
 :- dynamic(tokemon/5).
+:- dynamic(special/1).
 
 /* DATABASE KENTANG */
 legendary(fritz). 
@@ -251,16 +253,27 @@ attack :-
         nl,
         write('Tangkep ga?'),
         nl,
-        retract(tokemon(Enemy,_,_,_,_))
+        retract(tokemon(Enemy,_,_,_,_)),
+        retract(encounter(Enemy)),
+        (
+            special(Enemy) ->
+            retract(special(Enemy))
+        ),
+        (
+            special(TokemonP) ->
+            retract(special(TokemonP))
+        )
         ; retract(tokemon(Enemy,X,Y,_,Owner)),
         assertz(tokemon(Enemy,X,Y,HPnew,Owner)),
         write('Musuh kena damage')
     ).
 
 specialAttack :- \+status(battle), write('waduh sori ga bisa nih gan'),!, fail.
+specialAttack :- battle(TokemonP), special(TokemonP), write('waduh sori ga bisa nih gan'), !, fail.
 specialAttack :-
     battle(TokemonP),
     encounter(Enemy),
+    asserta(special(TokemonP)),
     (
         type(TokemonP,fire),type(Enemy,leaves) ->
             skill(TokemonP,Jurus,Atk),
@@ -282,7 +295,13 @@ specialAttack :-
         nl,
         write('Tangkep ga?'),
         nl,
-        retract(tokemon(Enemy,_,_,_,_))
+        retract(tokemon(Enemy,_,_,_,_)),
+        retract(encounter(Enemy)),
+        (
+            special(Enemy) ->
+            retract(special(Enemy))
+        ),
+        retract(special(TokemonP))
         ; retract(tokemon(Enemy,X,Y,_,Owner)),
         assertz(tokemon(Enemy,X,Y,HPnew,Owner)),
     
@@ -316,15 +335,22 @@ enemyAttack :-
             nl,
             retract(tokemon(TokemonP,_,_,_,_)),
             retract(inventory(TokemonP)),
-            printInventory
+            retract(battle(TokemonP)),
+            printInventory,
+            (
+                special(TokemonP) ->
+                retract(special(TokemonP))
+            )
         ; retract(tokemon(TokemonP,X,Y,_,Owner)),
         assertz(tokemon(TokemonP,X,Y,HPnew,Owner)),
         write('Kita kena damage')
     ).
 
+enemySpecialAttack :- encounter(Enemy), special(Enemy), write('waduh sori ga bisa nih gan'), !, fail.
 enemySpecialAttack :-
     battle(TokemonP),
     encounter(Enemy),
+    asserta(special(Enemy)),
     (
         type(Enemy,fire),type(TokemonP,leaves) ->
             skill(Enemy,Jurus,Atk),
@@ -348,7 +374,12 @@ enemySpecialAttack :-
             nl,
             retract(tokemon(TokemonP,_,_,_,_)),
             retract(inventory(TokemonP)),
-            printInventory
+            retract(battle(TokemonP)),
+            printInventory,
+            (
+                special(TokemonP) ->
+                retract(special(TokemonP))
+            )
         ; retract(tokemon(TokemonP,X,Y,_,Owner)),
         assertz(tokemon(TokemonP,X,Y,HPnew,Owner)),
         write('Kita kena damage')

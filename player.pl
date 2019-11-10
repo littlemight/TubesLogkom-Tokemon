@@ -72,11 +72,21 @@ checkEncounter :-
 
 run :-
     encounter(Tokemon),
+    battle(TokemonPlayer),
     random(1, 101, RNG),
     (RNG =< 40 ->
         write('You successfully escaped the Tokemon!'), nl, retract(encounter(Tokemon)),
+        retract(battle(TokemonPlayer)),
         retract(status(battle)),
-        asserta(status(roam))
+        asserta(status(roam)),
+        (
+            special(Tokemon) ->
+            retract(special(Tokemon))
+        ),
+        (
+            special(TokemonPlayer) ->
+            retract(special(TokemonPlayer))
+        )
     ;   write('You failed to run!'), nl, fight
     ).
 
