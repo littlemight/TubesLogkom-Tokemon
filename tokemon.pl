@@ -28,6 +28,12 @@ type(gerald, leaves).
 type(tjie, water).
 type(yo, water).
 type(gay, fire).
+
+damage(fritz,100).
+damage(gerald,120).
+damage(tjie,30).
+damage(yo,20).
+damage(gay,25).
 /* END OF DATABASE KENTANG */
 
 /* TOKEMON SPAWNS */

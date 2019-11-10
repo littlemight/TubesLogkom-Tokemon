@@ -88,8 +88,14 @@ attack :-
     encounter(Enemy),
     (
         type(TokemonP,fire),type(Enemy,leaves) ->
-        damage(TokemonP,Atk),
-        AtkAtribut is Atk + Atk/2
+            damage(TokemonP,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(TokemonP,leaves),type(Enemy,water) ->
+            damage(TokemonP,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(TokemonP,water),type(Enemy,water) ->
+            damage(TokemonP,Atk),
+            AtkAtribut is Atk + Atk/2
         ; AtkAtribut is Atk
     ),
     tokemon(Enemy,_,_,HP,_),
