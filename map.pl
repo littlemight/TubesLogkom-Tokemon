@@ -11,11 +11,6 @@ initMap :-
   asserta(height(H)),
   asserta(width(W)),
 
-  /* Get Player Position */
-  random(1, H, YPlayer),
-  random(1, W, XPlayer),
-  asserta(posPlayer(XPlayer, YPlayer)),
-
   /* Get Gym Position */
   random(1, H, XGym),
   random(1, W, YGym),
@@ -37,8 +32,8 @@ isEdge(X, Y) :- isEdgeW(X, Y); isEdgeA(X, Y); isEdgeS(X, Y); isEdgeD(X, Y).
 printPos(X, Y) :- gym(X, Y), !, write('G').
 printPos(X, Y) :- posPlayer(X, Y), !, write('P').
 printPos(X, Y) :- isEdge(X, Y), !, write('X').
-printPos(X, Y) :- tokemon(_, _, X, Y, _, _), !, write('T').
-printPos(X, Y) :- write('-'), !.
+printPos(X, Y) :- tokemon(_, X, Y, _, _), !, write('T').
+printPos(_, _) :- write('-'), !.
 
 map :-
   width(W),
@@ -56,6 +51,7 @@ map :-
   !
   .
 
+w :- encounter(_), write('waduh sori ga bisa nih gan'), nl, !.
 w :-
   retract(posPlayer(X, Y)),
   YNew is Y - 1,
@@ -63,9 +59,12 @@ w :-
     Y > 1, \+ (fence(X, YNew)) ->
     asserta(posPlayer(X, YNew));
     asserta(posPlayer(X, Y))
-  ), roamAllTokemon,
-  map
+  ),
+  roamAllTokemon,
+  map,
+  checkEncounter
   .
+
 
 a :-
   retract(posPlayer(X, Y)),
@@ -74,8 +73,10 @@ a :-
     X > 1, \+(fence(XNew, Y)) ->
     asserta(posPlayer(XNew, Y));
     asserta(posPlayer(X, Y))
-  ), roamAllTokemon,
-  map
+  ),
+  roamAllTokemon,
+  map,
+  checkEncounter
   .
 
 s :-
@@ -86,8 +87,10 @@ s :-
     Y < YMax, \+ (fence(X, YNew)) ->
     asserta(posPlayer(X, YNew));
     asserta(posPlayer(X, Y))
-  ), roamAllTokemon, 
-  map
+  ),
+  roamAllTokemon,
+  map,
+  checkEncounter 
   .
 
 d :-
@@ -98,6 +101,8 @@ d :-
     X < XMax, \+(fence(XNew, Y)) ->
       asserta(posPlayer(XNew, Y))
     ; asserta(posPlayer(X, Y))
-  ), roamAllTokemon,
-  map
+  ),
+  roamAllTokemon,
+  map,
+  checkEncounter
   .
