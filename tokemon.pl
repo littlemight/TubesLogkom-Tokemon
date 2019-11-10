@@ -319,3 +319,35 @@ enemyAttack :-
         assertz(tokemon(TokemonP,X,Y,HPnew,Owner)),
         write('Kita kena damage')
     ).
+
+enemySpecialAttack :-
+    battle(TokemonP),
+    encounter(Enemy),
+    (
+        type(Enemy,fire),type(TokemonP,leaves) ->
+            skill(Enemy,Jurus,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(Enemy,leaves),type(TokemonP,water) ->
+            skill(Enemy,Jurus,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(Enemy,water),type(TokemonP,water) ->
+            skill(Enemy,Jurus,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; skill(Enemy,Jurus,Atk),
+        AtkAtribut is Atk
+    ),
+    tokemon(TokemonP,_,_,HP,_),
+    HPnew is HP - AtkAtribut,
+    (
+        HPnew =< 0 ->
+            write('Tokemon kita kalah.'),
+            nl,
+            write('Pilih Tokemon lagi'),
+            nl,
+            retract(tokemon(TokemonP,_,_,_,_)),
+            retract(inventory(TokemonP)),
+            printInventory
+        ; retract(tokemon(TokemonP,X,Y,_,Owner)),
+        assertz(tokemon(TokemonP,X,Y,HPnew,Owner)),
+        write('Kita kena damage')
+    ).
