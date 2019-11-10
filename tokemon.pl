@@ -225,3 +225,97 @@ printStatus([Tokemon|Tail]) :-
     nl,
     nl,
     printStatus(Tail).
+
+attack :-
+    battle(TokemonP),
+    encounter(Enemy),
+    (
+        type(TokemonP,fire),type(Enemy,leaves) ->
+            damage(TokemonP,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(TokemonP,leaves),type(Enemy,water) ->
+            damage(TokemonP,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(TokemonP,water),type(Enemy,water) ->
+            damage(TokemonP,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; damage(TokemonP,Atk),
+        AtkAtribut is Atk
+    ),
+    tokemon(Enemy,_,_,HP,_),
+    HPnew is HP - AtkAtribut,
+    (
+        HPnew =< 0 ->
+        write('Musuh kalah.'),
+        nl,
+        write('Tangkep ga?'),
+        nl,
+        retract(tokemon(Enemy,_,_,_,_))
+        ; retract(tokemon(Enemy,X,Y,_,Owner)),
+        assertz(tokemon(Enemy,X,Y,HPnew,Owner)),
+        write('Musuh kena damage')
+    ).
+
+specialAttack :-
+    battle(TokemonP),
+    encounter(Enemy),
+    (
+        type(TokemonP,fire),type(Enemy,leaves) ->
+            skill(TokemonP,Jurus,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(TokemonP,leaves),type(Enemy,water) ->
+            skill(TokemonP,Jurus,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(TokemonP,water),type(Enemy,water) ->
+            skill(TokemonP,Jurus,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; damage(TokemonP, Atk), 
+        AtkAtribut is Atk
+    ),
+    tokemon(Enemy,_,_,HP,_),
+    HPnew is HP - AtkAtribut,
+    (
+        HPnew =< 0 ->
+        write('Musuh kalah.'),
+        nl,
+        write('Tangkep ga?'),
+        nl,
+        retract(tokemon(Enemy,_,_,_,_))
+        ; retract(tokemon(Enemy,X,Y,_,Owner)),
+        assertz(tokemon(Enemy,X,Y,HPnew,Owner)),
+    
+        write('Musuh kena Special Attack')
+    ).
+
+
+enemyAttack :-
+    battle(TokemonP),
+    encounter(Enemy),
+    (
+        type(Enemy,fire),type(TokemonP,leaves) ->
+            damage(Enemy,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(Enemy,leaves),type(TokemonP,water) ->
+            damage(Enemy,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(Enemy,water),type(TokemonP,water) ->
+            damage(Enemy,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; damage(Enemy,Atk),
+        AtkAtribut is Atk
+    ),
+    tokemon(TokemonP,_,_,HP,_),
+    HPnew is HP - AtkAtribut,
+    (
+        HPnew =< 0 ->
+            write('Tokemon kita kalah.'),
+            nl,
+            write('Pilih Tokemon lagi'),
+            nl,
+            retract(tokemon(TokemonP,_,_,_,_)),
+            retract(inventory(TokemonP)),
+            printInventory
+        ; retract(tokemon(TokemonP,X,Y,_,Owner)),
+        assertz(tokemon(TokemonP,X,Y,HPnew,Owner)),
+        write('Kita kena damage')
+    ).
