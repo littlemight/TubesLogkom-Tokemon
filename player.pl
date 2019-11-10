@@ -30,11 +30,11 @@ pick(Tokemon) :-
     ;   write('You don\'t have that Tokemon!')
     ).
 
-addTokemon(Tokemon) :-
-    asserta(inventory(Tokemon)),
+
+isInventoryFull :-
     sizeInventory(Size),
     NewSize is Size + 1,
-    (NewSize > 6), !, fail.
+    (NewSize > 6), !.
 
 addTokemon(Tokemon) :-
     asserta(inventory(Tokemon)),
@@ -65,13 +65,27 @@ checkEncounter :-
     take(ListTokemon, Pick, NameTokemon),
     write('A wild Tokemon appears!'), nl,
     write('Fight or Run?'), nl,
+    retract(status(roam)),
+    asserta(status(battle)),
     asserta(encounter(NameTokemon)), !.
 
 run :-
     encounter(Tokemon),
+    battle(TokemonPlayer),
     random(1, 101, RNG),
     (RNG =< 40 ->
-        write('You successfully escaped the Tokemon!'), nl, retract(encounter(Tokemon))
+        write('You successfully escaped the Tokemon!'), nl, retract(encounter(Tokemon)),
+        retract(battle(TokemonPlayer)),
+        retract(status(battle)),
+        asserta(status(roam)),
+        (
+            special(Tokemon) ->
+            retract(special(Tokemon))
+        ),
+        (
+            special(TokemonPlayer) ->
+            retract(special(TokemonPlayer))
+        )
     ;   write('You failed to run!'), nl, fight
     ).
 

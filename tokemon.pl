@@ -10,7 +10,10 @@
 /* normal(NamaTokemon) */
 /* damage(NamaTokemon, JumlahDamage) */
 /* skill(NamaTokemon,NamaSkill,JumlahDamage) */
+
+/* special(NamaTokemon)*/
 :- dynamic(tokemon/5).
+:- dynamic(special/1). /* special(Tokemon), Tokemon udah pake special atau belum */
 
 /* DATABASE KENTANG */
 legendary(fritz). 
@@ -204,6 +207,7 @@ dTokemon(Tokemon) :-
     !.
 /* END OF TOKEMON MOVEMENTS */
 
+/* TOKEMON OUTPUTS  */
 status :-
     findall(Tokemon, tokemon(Tokemon,_,_,_,1), ListTokemon),
     write('Tokemon kamu : '),
@@ -226,6 +230,31 @@ printStatus([Tokemon|Tail]) :-
     nl,
     printStatus(Tail).
 
+printSpecialAttackMessage(TokemonP, Jurus) :- format('~w used ~w!', [TokemonP, Jurus]), nl.
+printPlayerDamage(AtkAtribut, Enemy) :- format('You dealt ~w damage to ~w', [AtkAtribut, Enemy]), nl.
+printEnemyDamage(Enemy, AtkAtribut, CurrentPicked) :- format('~w dealt ~w damage to ~w', [Enemy, AtkAtribut, CurrentPicked]), nl.
+/* END OF TOKEMON OUTPUTS */
+
+/* TOKEMON BATTLE BEHAVIOUR */
+capture :-
+    isInventoryFull,
+    write('You cannot capture another Tokemon! You have to drop one first.'), nl, !.
+capture :-
+    retract(encounter(Enemy)),
+    format('~w is captured!', [Enemy]),
+    retract(tokemon(Enemy,X,Y,_,_)),
+    maxHealth(Enemy, MaxHP),
+    asserta(tokemon(Enemy,X,Y,MaxHP,1)),
+    addTokemon(Enemy),
+    retract(battle(_)).
+ignore :- /* ignore == mati */
+    retract(encounter(Enemy)),
+    retract(tokemon(Enemy,_,_,_,_)),
+    retract(battle(_)).
+
+% PLAYER
+attack :- \+status(battle), write('waduh sori ga bisa nih gan'),!, fail.
+attack :- \+(battle(_)), write('Pilih Tokemon terlebih dahulu!'), !.
 attack :-
     battle(TokemonP),
     encounter(Enemy),
@@ -243,6 +272,7 @@ attack :-
         AtkAtribut is Atk
     ),
     tokemon(Enemy,_,_,HP,_),
+    printPlayerDamage(AtkAtribut, Enemy),
     HPnew is HP - AtkAtribut,
     (
         HPnew =< 0 ->
@@ -250,15 +280,28 @@ attack :-
         nl,
         write('Tangkep ga?'),
         nl,
-        retract(tokemon(Enemy,_,_,_,_))
+        (
+            special(Enemy) ->
+            retract(special(Enemy));
+            !
+        ),
+        (
+            special(TokemonP) ->
+            retract(special(TokemonP));
+            !
+        )
         ; retract(tokemon(Enemy,X,Y,_,Owner)),
         assertz(tokemon(Enemy,X,Y,HPnew,Owner)),
         write('Musuh kena damage')
-    ).
+    ), !.
 
+specialAttack :- \+status(battle), write('waduh sori ga bisa nih gan'),!, fail.
+specialAttack :- \+(battle(_)), write('Pilih Tokemon terlebih dahulu!'), !.
+specialAttack :- battle(TokemonP), special(TokemonP), write('Special attacks can only be used once per battle!'), !, fail.
 specialAttack :-
     battle(TokemonP),
     encounter(Enemy),
+    asserta(special(TokemonP)),
     (
         type(TokemonP,fire),type(Enemy,leaves) ->
             skill(TokemonP,Jurus,Atk),
@@ -274,20 +317,27 @@ specialAttack :-
     ),
     tokemon(Enemy,_,_,HP,_),
     HPnew is HP - AtkAtribut,
-    (
-        HPnew =< 0 ->
+    printSpecialAttackMessage(TokemonP, Jurus),
+    (HPnew =< 0 ->
         write('Musuh kalah.'),
         nl,
         write('Tangkep ga?'),
         nl,
-        retract(tokemon(Enemy,_,_,_,_))
+        retract(tokemon(Enemy,_,_,_,_)),
+        retract(encounter(Enemy)),
+        (
+            special(Enemy) ->
+            retract(special(Enemy))
+        ),
+        retract(special(TokemonP))
         ; retract(tokemon(Enemy,X,Y,_,Owner)),
         assertz(tokemon(Enemy,X,Y,HPnew,Owner)),
     
         write('Musuh kena Special Attack')
     ).
+% END OF PLAYER
 
-
+% ENEMY
 enemyAttack :-
     battle(TokemonP),
     encounter(Enemy),
@@ -314,8 +364,64 @@ enemyAttack :-
             nl,
             retract(tokemon(TokemonP,_,_,_,_)),
             retract(inventory(TokemonP)),
-            printInventory
+            retract(battle(TokemonP)),
+            printInventory,
+            (
+                special(TokemonP) ->
+                retract(special(TokemonP))
+            )
         ; retract(tokemon(TokemonP,X,Y,_,Owner)),
         assertz(tokemon(TokemonP,X,Y,HPnew,Owner)),
         write('Kita kena damage')
     ).
+
+enemySpecialAttack :- encounter(Enemy), special(Enemy), write('waduh sori ga bisa nih gan'), !, fail.
+enemySpecialAttack :-
+    battle(TokemonP),
+    encounter(Enemy),
+    asserta(special(Enemy)),
+    (
+        type(Enemy,fire),type(TokemonP,leaves) ->
+            skill(Enemy,Jurus,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(Enemy,leaves),type(TokemonP,water) ->
+            skill(Enemy,Jurus,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(Enemy,water),type(TokemonP,water) ->
+            skill(Enemy,Jurus,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; skill(Enemy,Jurus,Atk),
+        AtkAtribut is Atk
+    ),
+    tokemon(TokemonP,_,_,HP,_),
+    printSpecialAttackMessage(TokemonP, Jurus),
+    printEnemyDamage(Enemy, AtkAtribut, TokemonP),
+    HPnew is HP - AtkAtribut,
+    (HPnew =< 0 ->
+            write('Tokemon kita kalah.'),
+            nl,
+            write('Pilih Tokemon lagi'),
+            nl,
+            retract(tokemon(TokemonP,_,_,_,_)),
+            retract(inventory(TokemonP)),
+            retract(battle(TokemonP)),
+            printInventory,
+            (
+                special(TokemonP) ->
+                retract(special(TokemonP))
+            )
+        ; retract(tokemon(TokemonP,X,Y,_,Owner)),
+        assertz(tokemon(TokemonP,X,Y,HPnew,Owner)),
+        write('Kita kena damage')
+    ).
+% END OF ENEMY
+
+% RNG BEHAVIOUR 
+decideEnemyBattle :-
+    random(1, 101, RNG),
+    (RNG =< 25 ->
+        enemySpecialAttack
+    ;   enemyAttack
+    ).
+% END OF RNG BEHAVIOUR
+/* END OF TOKEMON BATTLE BEHAVIOUR */
