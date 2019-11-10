@@ -1,6 +1,7 @@
 :- dynamic(height/1).
 :- dynamic(width/1).
 :- dynamic(gym/2).
+:- dynamic(fence/2).
 :- dynamic(posPlayer/2).
 
 initMap :- 
@@ -36,6 +37,7 @@ isEdge(X, Y) :- isEdgeW(X, Y); isEdgeA(X, Y); isEdgeS(X, Y); isEdgeD(X, Y).
 printPos(X, Y) :- gym(X, Y), !, write('G').
 printPos(X, Y) :- posPlayer(X, Y), !, write('P').
 printPos(X, Y) :- isEdge(X, Y), !, write('X').
+printPos(X, Y) :- tokemon(_, _, X, Y, _, _), !, write('T').
 printPos(X, Y) :- write('-'), !.
 
 map :-
@@ -56,46 +58,46 @@ map :-
 
 w :-
   retract(posPlayer(X, Y)),
+  YNew is Y - 1,
   (
-    Y > 1 ->
-    YNew is Y - 1,
+    Y > 1, \+ (fence(X, YNew)) ->
     asserta(posPlayer(X, YNew));
     asserta(posPlayer(X, Y))
-  ),
+  ), roamAllTokemon,
   map
   .
 
 a :-
   retract(posPlayer(X, Y)),
+  XNew is X - 1,
   (
-    X > 1 ->
-    XNew is X - 1,
+    X > 1, \+(fence(XNew, Y)) ->
     asserta(posPlayer(XNew, Y));
     asserta(posPlayer(X, Y))
-  ),
+  ), roamAllTokemon,
   map
   .
 
 s :-
   retract(posPlayer(X, Y)),
   height(YMax),
+  YNew is Y + 1,
   (
-    Y < YMax ->
-    YNew is Y + 1,
+    Y < YMax, \+ (fence(X, YNew)) ->
     asserta(posPlayer(X, YNew));
     asserta(posPlayer(X, Y))
-  ),
+  ), roamAllTokemon, 
   map
   .
 
 d :-
   retract(posPlayer(X, Y)),
   width(XMax),
+  XNew is X + 1,
   (
-    X < XMax ->
-    XNew is X + 1,
-    asserta(posPlayer(XNew, Y));
-    asserta(posPlayer(X, Y))
-  ),
+    X < XMax, \+(fence(XNew, Y)) ->
+      asserta(posPlayer(XNew, Y))
+    ; asserta(posPlayer(X, Y))
+  ), roamAllTokemon,
   map
   .
