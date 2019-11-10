@@ -1,7 +1,6 @@
 :- dynamic(inventory/1). /* inventory(Tokemon), Tokemon ada di inventory player */
 :- dynamic(encounter/1). /* encounter(Tokemon), sekarang lagi ketemu Tokemon apa */
 :- dynamic(battle/1). /* battle(Tokemon), sekarang Tokemon apa yang kita pilih buat battle */
-:- dynamic(status/1).
 
 initPlayer :-
     /* Get Player Position */
@@ -72,11 +71,21 @@ checkEncounter :-
 
 run :-
     encounter(Tokemon),
+    battle(TokemonPlayer),
     random(1, 101, RNG),
     (RNG =< 40 ->
         write('You successfully escaped the Tokemon!'), nl, retract(encounter(Tokemon)),
+        retract(battle(TokemonPlayer)),
         retract(status(battle)),
-        asserta(status(roam))
+        asserta(status(roam)),
+        (
+            special(Tokemon) ->
+            retract(special(Tokemon))
+        ),
+        (
+            special(TokemonPlayer) ->
+            retract(special(TokemonPlayer))
+        )
     ;   write('You failed to run!'), nl, fight
     ).
 
