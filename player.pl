@@ -1,5 +1,6 @@
 :- dynamic(inventory/1). /* inventory(Tokemon), Tokemon ada di inventory player */
 :- dynamic(encounter/1). /* encounter(Tokemon), sekarang lagi ketemu Tokemon apa */
+:- dynamic(battle/1). /* battle(Tokemon), sekarang Tokemon apa yang kita pilih buat battle */
 
 initPlayer :-
     /* Get Player Position */
@@ -24,7 +25,8 @@ sizeInventory(Size) :-
 
 pick(Tokemon) :- 
     (inventory(Tokemon) ->
-        write('yay bisa')
+        write('yay bisa'),
+        asserta(battle(Tokemon))
     ;   write('You don\'t have that Tokemon!')
     ).
 
@@ -67,7 +69,7 @@ checkEncounter :-
 
 run :-
     encounter(Tokemon),
-    random(1, 100, RNG),
+    random(1, 101, RNG),
     (RNG =< 40 ->
         write('You successfully escaped the Tokemon!'), nl, retract(encounter(Tokemon))
     ;   write('You failed to run!'), nl, fight
@@ -80,3 +82,24 @@ fight :-
 printInventory :-
     findall(Tokemon, inventory(Tokemon), ListTokemon),
     write(ListTokemon).
+
+attack :-
+    battle(TokemonP),
+    encounter(Enemy),
+    (
+        type(TokemonP,fire),type(Enemy,leaves) ->
+        damage(TokemonP,Atk),
+        AtkAtribut is Atk + Atk/2
+        ; AtkAtribut is Atk
+    ),
+    tokemon(Enemy,_,_,HP,_),
+    HPnew is HP - AtkAtribut,
+    (
+        HPnew =< 0 ->
+        write('Musuh kalah.'),
+        nl,
+        retract(tokemon(Enemy,_,_,_,_))
+        ; retract(tokemon(Enemy,X,Y,_,owner)),
+        assertz(tokemon(Enemy,X,Y,HPnew,owner)),
+        write('Musuh kena damage')
+    ).
