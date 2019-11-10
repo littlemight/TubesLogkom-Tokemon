@@ -26,14 +26,12 @@ sizeInventory(Size) :-
 pick(Tokemon) :- 
     (inventory(Tokemon) ->
         write('yay bisa'),
-        asserta(battle(Tokemon)),
-        retract(status(roam)),
-        asserta(status(battle))
+        asserta(battle(Tokemon))
     ;   write('You don\'t have that Tokemon!')
     ).
 
 
-isFull :-
+isInventoryFull :-
     sizeInventory(Size),
     NewSize is Size + 1,
     (NewSize > 6), !.
@@ -67,6 +65,8 @@ checkEncounter :-
     take(ListTokemon, Pick, NameTokemon),
     write('A wild Tokemon appears!'), nl,
     write('Fight or Run?'), nl,
+    retract(status(roam)),
+    asserta(status(battle)),
     asserta(encounter(NameTokemon)), !.
 
 run :-
