@@ -113,7 +113,7 @@ attack :-
         write('Musuh kena damage')
     ).
 
-specialAttak :-
+specialAttack :-
     battle(TokemonP),
     encounter(Enemy),
     (
