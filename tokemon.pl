@@ -10,6 +10,8 @@
 /* normal(NamaTokemon) */
 /* damage(NamaTokemon, JumlahDamage) */
 /* skill(NamaTokemon,NamaSkill,JumlahDamage) */
+
+:- dynamic(status/1).
 :- dynamic(tokemon/5).
 
 /* DATABASE KENTANG */
@@ -204,6 +206,7 @@ dTokemon(Tokemon) :-
     !.
 /* END OF TOKEMON MOVEMENTS */
 
+/* OUTPUT TOKE STATS */
 status :-
     findall(Tokemon, tokemon(Tokemon,_,_,_,1), ListTokemon),
     write('Tokemon kamu : '),
@@ -225,7 +228,10 @@ printStatus([Tokemon|Tail]) :-
     nl,
     nl,
     printStatus(Tail).
+/* END OF OUTPUT TOKE STATS */
 
+/* TOKEMON BATTLE BEHAVIOUR */
+% PLAYER
 attack :-
     battle(TokemonP),
     encounter(Enemy),
@@ -286,8 +292,9 @@ specialAttack :-
     
         write('Musuh kena Special Attack')
     ).
+% END OF PLAYER
 
-
+% ENEMY
 enemyAttack :-
     battle(TokemonP),
     encounter(Enemy),
@@ -319,3 +326,9 @@ enemyAttack :-
         assertz(tokemon(TokemonP,X,Y,HPnew,Owner)),
         write('Kita kena damage')
     ).
+% END OF ENEMY
+
+% RNG BEHAVIOUR 
+
+% END OF RNG BEHAVIOUR
+/* END OF TOKEMON BATTLE BEHAVIOUR */
