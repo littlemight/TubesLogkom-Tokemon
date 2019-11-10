@@ -230,10 +230,27 @@ printStatus([Tokemon|Tail]) :-
     nl,
     printStatus(Tail).
 
-printSpecialMessage(TokemonP, Jurus) :- format('~w used ~w!', [TokemonP, Jurus]).
+printSpecialAttackMessage(TokemonP, Jurus) :- format('~w used ~w!', [TokemonP, Jurus]).
+printPlayerDamage(AtkAtribut, Enemy) :- format('You dealt ~w damage to ~w', [AtkAtribut, Enemy]), nl.
+printEnemyDamage(Enemy, AtkAtribut, CurrentPicked) :- format('~w dealt ~w damage to ~w', [Enemy, AtkAtribut, CurrentPicked]), nl.
+
 /* END OF TOKEMON OUTPUTS */
 
 /* TOKEMON BATTLE BEHAVIOUR */
+capture :-
+    isFullInventory,
+    write('You cannot capture another Tokemon! You have to drop one first.'), nl, !.
+capture :-
+    retract(encounter(Enemy)),
+    retract(tokemon(Enemy,X,Y,HP,_)),
+    asserta(tokemon(Enemy,X,Y,HP,1)),
+    addTokemon(Enemy),
+    retract(battle(CurrentPicked)).
+ignore :- /* ignore == mati */
+    retract(encounter(Enemy)),
+    retract(tokemon(Enemy,X,Y,HP,_)),
+    retract(battle(CurrentPicked)).
+
 % PLAYER
 attack :- \+status(battle), write('waduh sori ga bisa nih gan'),!, fail.
 attack :-
@@ -260,20 +277,20 @@ attack :-
         nl,
         write('Tangkep ga?'),
         nl,
-        retract(tokemon(Enemy,_,_,_,_)),
-        retract(encounter(Enemy)),
         (
             special(Enemy) ->
-            retract(special(Enemy))
+            retract(special(Enemy));
+            !
         ),
         (
             special(TokemonP) ->
-            retract(special(TokemonP))
+            retract(special(TokemonP));
+            !
         )
         ; retract(tokemon(Enemy,X,Y,_,Owner)),
         assertz(tokemon(Enemy,X,Y,HPnew,Owner)),
         write('Musuh kena damage')
-    ).
+    ), !.
 
 specialAttack :- \+status(battle), write('waduh sori ga bisa nih gan'),!, fail.
 specialAttack :- battle(TokemonP), special(TokemonP), write('waduh sori ga bisa nih gan'), !, fail.
@@ -295,9 +312,13 @@ specialAttack :-
         AtkAtribut is Atk
     ),
     tokemon(Enemy,_,_,HP,_),
-    printSpecialMessage(TokemonP, Jurus),
+    printSpecialAttackMessage(TokemonP, Jurus),
     HPnew is HP - AtkAtribut,
     (
+        HPnew =< 0 ->
+        
+    printSpecialAttackMessage(TokemonP, Jurus),
+    HPnew is HP - AtkAtribut,
         HPnew =< 0 ->
         write('Musuh kalah.'),
         nl,
@@ -374,10 +395,9 @@ enemySpecialAttack :-
         AtkAtribut is Atk
     ),
     tokemon(TokemonP,_,_,HP,_),
-    printSpecialMessage(TokemonP, Jurus),
+    printSpecialAttackMessage(TokemonP, Jurus),
     HPnew is HP - AtkAtribut,
-    (
-        HPnew =< 0 ->
+    (HPnew =< 0 ->
             write('Tokemon kita kalah.'),
             nl,
             write('Pilih Tokemon lagi'),

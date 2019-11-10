@@ -32,11 +32,11 @@ pick(Tokemon) :-
     ;   write('You don\'t have that Tokemon!')
     ).
 
-addTokemon(Tokemon) :-
-    asserta(inventory(Tokemon)),
+
+isFull :-
     sizeInventory(Size),
     NewSize is Size + 1,
-    (NewSize > 6), !, fail.
+    (NewSize > 6), !.
 
 addTokemon(Tokemon) :-
     asserta(inventory(Tokemon)),
