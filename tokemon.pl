@@ -203,3 +203,25 @@ dTokemon(Tokemon) :-
     ),
     !.
 /* END OF TOKEMON MOVEMENTS */
+
+status :-
+    findall(Tokemon, tokemon(Tokemon,_,_,_,1), ListTokemon),
+    write('Tokemon kamu : '),
+    nl,
+    printStatus(ListTokemon).
+    
+printStatus([]) :- !.
+
+printStatus([Tokemon|Tail]) :-
+    tokemon(Tokemon, _, _, HP, _),
+    type(Tokemon, Type),
+    write(Tokemon),
+    nl,
+    write('Health : '),
+    write(HP),
+    nl,
+    write('Type : '),
+    write(Type),
+    nl,
+    nl,
+    printStatus(Tail).
