@@ -8,6 +8,8 @@
 /* maxHealth(NameTokemon, MaxHP) */
 /* legendary(NameTokemon) */
 /* normal(NamaTokemon) */
+/* damage(NamaTokemon, JumlahDamage) */
+/* skill(NamaTokemon,NamaSkill,JumlahDamage) */
 :- dynamic(tokemon/5).
 
 /* DATABASE KENTANG */
@@ -34,6 +36,12 @@ damage(gerald,120).
 damage(tjie,30).
 damage(yo,20).
 damage(gay,25).
+
+skill(fritz,a,200).
+skill(gerald,b,250).
+skill(tjie,c,100).
+skill(yo,d,80).
+skill(gay,e,90).
 /* END OF DATABASE KENTANG */
 
 /* TOKEMON SPAWNS */

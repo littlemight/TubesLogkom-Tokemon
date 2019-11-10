@@ -104,8 +104,39 @@ attack :-
         HPnew =< 0 ->
         write('Musuh kalah.'),
         nl,
+        write('Tangkep ga?'),
+        nl,
         retract(tokemon(Enemy,_,_,_,_))
         ; retract(tokemon(Enemy,X,Y,_,owner)),
         assertz(tokemon(Enemy,X,Y,HPnew,owner)),
         write('Musuh kena damage')
+    ).
+
+specialAttak :-
+    battle(TokemonP),
+    encounter(Enemy),
+    (
+        type(TokemonP,fire),type(Enemy,leaves) ->
+            skill(TokemonP,Jurus,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(TokemonP,leaves),type(Enemy,water) ->
+            skill(TokemonP,Jurus,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(TokemonP,water),type(Enemy,water) ->
+            skill(TokemonP,Jurus,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; AtkAtribut is Atk
+    ),
+    tokemon(Enemy,_,_,HP,_),
+    HPnew is HP - AtkAtribut,
+    (
+        HPnew =< 0 ->
+        write('Musuh kalah.'),
+        nl,
+        write('Tangkep ga?'),
+        nl,
+        retract(tokemon(Enemy,_,_,_,_))
+        ; retract(tokemon(Enemy,X,Y,_,owner)),
+        assertz(tokemon(Enemy,X,Y,HPnew,owner)),
+        write('Musuh kena Special Attack')
     ).
