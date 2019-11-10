@@ -83,4 +83,18 @@ printInventory :-
     findall(Tokemon, inventory(Tokemon), ListTokemon),
     write(ListTokemon).
 
-
+heal :- 
+    posPlayer(XPlayer, YPlayer), 
+    \+(gym(XPlayer, YPlayer)),
+    write("You are not in a gym"),
+    nl,
+    !.
+heal :-
+    findall(Tokemon, inventory(Tokemon), ListTokemon),
+    healList(ListTokemon), !.
+healList([]):- !.
+healList([Tokemon|Tail]) :-
+    maxHealth(Tokemon, MaxHP),
+    retract(tokemon(Tokemon, X, Y, _, _)),
+    asserta(tokemon(Tokemon, X, Y, MaxHP, 1)),
+    healList(Tail).
