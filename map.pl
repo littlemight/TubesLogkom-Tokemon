@@ -12,8 +12,8 @@ initMap :-
   asserta(width(W)),
 
   /* Get Gym Position */
-  random(1, H, XGym),
-  random(1, W, YGym),
+  random(1, H, YGym),
+  random(1, W, XGym),
   asserta(gym(XGym, YGym))
   .
 
@@ -49,62 +49,4 @@ map :-
     nl
   )),
   !
-  .
-
-w :- \+status(roam), write('waduh sori ga bisa nih gan'),!, fail.
-w :-
-  retract(posPlayer(X, Y)),
-  YNew is Y - 1,
-  (
-    Y > 1, \+ (fence(X, YNew)) ->
-    asserta(posPlayer(X, YNew));
-    asserta(posPlayer(X, Y))
-  ),
-  roamAllTokemon,
-  map,
-  checkEncounter
-  .
-
-a :- \+status(roam),  write('waduh sori ga bisa nih gan'),!, fail.
-a :-
-  retract(posPlayer(X, Y)),
-  XNew is X - 1,
-  (
-    X > 1, \+(fence(XNew, Y)) ->
-    asserta(posPlayer(XNew, Y));
-    asserta(posPlayer(X, Y))
-  ),
-  roamAllTokemon,
-  map,
-  checkEncounter
-  .
-
-s :- \+status(roam), write('waduh sori ga bisa nih gan'),!, fail.
-s :-
-  retract(posPlayer(X, Y)),
-  height(YMax),
-  YNew is Y + 1,
-  (
-    Y < YMax, \+ (fence(X, YNew)) ->
-    asserta(posPlayer(X, YNew));
-    asserta(posPlayer(X, Y))
-  ),
-  roamAllTokemon,
-  map,
-  checkEncounter 
-  .
-
-d :- \+status(roam), write('waduh sori ga bisa nih gan'),!, fail.
-d :-
-  retract(posPlayer(X, Y)),
-  width(XMax),
-  XNew is X + 1,
-  (
-    X < XMax, \+(fence(XNew, Y)) ->
-      asserta(posPlayer(XNew, Y))
-    ; asserta(posPlayer(X, Y))
-  ),
-  roamAllTokemon,
-  map,
-  checkEncounter
   .
