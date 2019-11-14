@@ -91,7 +91,6 @@ skill(azong, renang, 25).
 skill(tudecu, nyasar, 60).
 skill(pilbet, flamethrower, 20).
 skill(jopan, kentut, 55).
-
 /* END OF DATABASE KENTANG */
 
 /* TOKEMON SPAWNS */
@@ -328,6 +327,8 @@ printBattleStatus(TokemonP, Enemy) :-
 /* END OF TOKEMON OUTPUTS */
 
 /* TOKEMON BATTLE BEHAVIOUR */
+capture :- \+(encounter(_)), write('You\'re not in battle!'), nl, !.
+capture :- encounter(Enemy), tokemon(Enemy, _, _, HP, _), HP > 0, write('You have to defeat the Tokemon first!'), nl, !.
 capture :-
     isInventoryFull,
     write('You cannot capture another Tokemon! You have to drop one first.'), nl, !.
@@ -339,6 +340,8 @@ capture :-
     asserta(tokemon(Enemy,X,Y,MaxHP,1)),
     addTokemon(Enemy),
     retract(battle(_)).
+ignore :- \+(encounter(_)), write('You\'re not in battle!'), nl, !.
+ignore :- encounter(Enemy), tokemon(Enemy, _, _, HP, _), HP > 0, write('You have to defeat the Tokemon first!'), nl, !.
 ignore :- /* ignore == mati */
     retract(encounter(Enemy)),
     retract(tokemon(Enemy,_,_,_,_)),
@@ -347,6 +350,7 @@ ignore :- /* ignore == mati */
 % PLAYER
 attack :- \+status(battle), write('waduh sori ga bisa nih gan'),!, fail.
 attack :- \+(battle(_)), write('Pilih Tokemon terlebih dahulu!'), !.
+attack :- battle(Tokemon), tokemon(Tokemon, _, _, HP, _), HP =:= 0, write('Have some mercy.'), nl, !.
 attack :-
     battle(TokemonP),
     encounter(Enemy),
@@ -388,37 +392,39 @@ attack :-
             special(TokemonP) ->
             retract(special(TokemonP));
             !
-        )
+        ), retract(status(_)),
+        asserta(status(roam))
         ; retract(tokemon(Enemy,X,Y,_,Owner)),
         assertz(tokemon(Enemy,X,Y,HPnew,Owner))
     ),
     (HPadd > 0 ->
-        decideEnemyBattle, !
+        sleep(2), decideEnemyBattle, !
     ; !
     ).
     
 specialAttack :- \+status(battle), write('waduh sori ga bisa nih gan'),!, fail.
 specialAttack :- \+(battle(_)), write('Pilih Tokemon terlebih dahulu!'), !.
+specialAttack :- battle(Tokemon), tokemon(Tokemon, _, _, HP, _), HP =:= 0, write('Have some mercy.'), nl, !.
 specialAttack :- battle(TokemonP), special(TokemonP), write('Special attacks can only be used once per battle!'), !, fail.
 specialAttack :-
     battle(TokemonP),
     encounter(Enemy),
+    skill(TokemonP, Jurus, Atk),
     asserta(special(TokemonP)),
     (
         type(TokemonP,fire),type(Enemy,leaves) ->
-            skill(TokemonP,Jurus,Atk),
             AtkAtribut is Atk + Atk/2
         ; type(TokemonP,leaves),type(Enemy,water) ->
-            skill(TokemonP,Jurus,Atk),
             AtkAtribut is Atk + Atk/2
         ; type(TokemonP,water),type(Enemy,fire) ->
-            skill(TokemonP,Jurus,Atk),
             AtkAtribut is Atk + Atk/2
         ; damage(TokemonP, Atk), 
         AtkAtribut is Atk
     ),
     tokemon(Enemy,X,Y,HP,Ownership),
     printSpecialAttackMessage(TokemonP, Jurus), nl,
+    write('.....'), nl,
+    sleep(1),
     printPlayerDamage(AtkAtribut,Enemy),nl,
     retract(tokemon(Enemy, X, Y, HP, Ownership)),
     HPnew is HP - AtkAtribut,
@@ -428,7 +434,7 @@ specialAttack :-
     ),
     asserta(tokemon(Enemy, X, Y, HPadd, Ownership)),
     printBattleStatus(TokemonP, Enemy),
-    (HPnew =< 0 ->
+    (HPadd =:= 0 ->
         write('Musuh kalah.'),
         nl,
         write('Tangkep ga?'),
@@ -444,7 +450,7 @@ specialAttack :-
         assertz(tokemon(Enemy,X,Y,HPnew,Owner))
     ),
     (HPadd > 0 ->
-        decideEnemyBattle, !
+        sleep(2), decideEnemyBattle, !
     ; !
     ).
 % END OF PLAYER
@@ -480,9 +486,7 @@ enemyAttack :-
     printBattleStatus(TokemonP, Enemy),
     (HPadd =:= 0 ->
         write('Tokemon kamu kalah.'),
-
         nl,
-       
         retract(tokemon(TokemonP,_,_,_,_)),
         retract(inventory(TokemonP)),
         retract(battle(TokemonP)),
@@ -500,26 +504,26 @@ enemyAttack :-
     ; retract(tokemon(TokemonP,X,Y,_,Owner)), assertz(tokemon(TokemonP,X,Y,HPnew,Owner))
     ).
 
-enemySpecialAttack :- encounter(Enemy), special(Enemy), format('~w cannot use is special attack anymore!',[Enemy]), !, fail.
+enemySpecialAttack :- encounter(Enemy), special(Enemy), format('~w cannot use its special attack anymore!',[Enemy]), !, fail.
 enemySpecialAttack :-
     battle(TokemonP),
     encounter(Enemy),
     asserta(special(Enemy)),
+    skill(Enemy, Jurus, Atk),
     (
         type(Enemy,fire),type(TokemonP,leaves) ->
-            skill(Enemy,Jurus,Atk),
             AtkAtribut is Atk + Atk/2
         ; type(Enemy,leaves),type(TokemonP,water) ->
-            skill(Enemy,Jurus,Atk),
             AtkAtribut is Atk + Atk/2
         ; type(Enemy,water),type(TokemonP,fire) ->
-            skill(Enemy,Jurus,Atk),
             AtkAtribut is Atk + Atk/2
         ; skill(Enemy,Jurus,Atk),
         AtkAtribut is Atk
     ),
     tokemon(TokemonP,X,Y,HP,Ownership),
     printSpecialAttackMessage(Enemy, Jurus), nl, 
+    write('.....'), nl,
+    sleep(1),
     printEnemyDamage(Enemy, AtkAtribut, TokemonP), nl,
     HPnew is HP - AtkAtribut,
     (HPnew < 0 ->

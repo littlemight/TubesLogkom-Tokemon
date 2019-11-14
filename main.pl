@@ -29,7 +29,7 @@ start :-
 	help,
 	asserta(status(roam)),
     initMap,
-    random(1, 3, N),
+    random(5, 10, N),
     initNormal(N),
     random(2, 3, NLegendary),
     initLegendary(NLegendary),

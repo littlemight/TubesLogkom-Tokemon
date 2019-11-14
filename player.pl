@@ -1,6 +1,7 @@
 :- dynamic(inventory/1). /* inventory(Tokemon), Tokemon ada di inventory player */
 :- dynamic(encounter/1). /* encounter(Tokemon), sekarang lagi ketemu Tokemon apa */
 :- dynamic(battle/1). /* battle(Tokemon), sekarang Tokemon apa yang kita pilih buat battle */
+:- dynamic(hasHealed/0).
 
 initPlayer :-
     /* Get Player Position */
@@ -175,8 +176,12 @@ heal :-
     nl,
     !.
 heal :-
+    asserta(hasHealed),
     findall(Tokemon, inventory(Tokemon), ListTokemon),
-    healList(ListTokemon), !.
+    healList(ListTokemon),
+    write('Your Tokemons have been healed!'), nl,
+    status, !.
+    
 healList([]):- !.
 healList([Tokemon|Tail]) :-
     maxHealth(Tokemon, MaxHP),
