@@ -20,7 +20,7 @@ initPlayer :-
     asserta(inventory(NameTokemon)),
     asserta(tokemon(NameTokemon, 0, 0, HealthTokemon, 1)). /* 1 = dimiliki player, (0, 0) soalnya posisinya ga penting) */
     
-w :- \+status(roam), write('waduh sori ga bisa nih gan'),!, fail.
+w :- \+status(roam), write('Sorry! You cannot do that for now. '),!, fail.
 w :-
   retract(posPlayer(X, Y)),
   YNew is Y - 1,
@@ -33,7 +33,7 @@ w :-
   checkEncounter
   .
 
-a :- \+status(roam),  write('waduh sori ga bisa nih gan'),!, fail.
+a :- \+status(roam),  write('Sorry! You cannot do that for now. '),!, fail.
 a :-
   retract(posPlayer(X, Y)),
   XNew is X - 1,
@@ -46,7 +46,7 @@ a :-
   checkEncounter
   .
 
-s :- \+status(roam), write('waduh sori ga bisa nih gan'),!, fail.
+s :- \+status(roam), write('Sorry! You cannot do that for now. '),!, fail.
 s :-
   retract(posPlayer(X, Y)),
   height(YMax),
@@ -60,7 +60,7 @@ s :-
   checkEncounter 
   .
 
-d :- \+status(roam), write('waduh sori ga bisa nih gan'),!, fail.
+d :- \+status(roam), write('Sorry! You cannot do that for now. '),!, fail.
 d :-
   retract(posPlayer(X, Y)),
   width(XMax),
@@ -121,7 +121,10 @@ checkEncounter :-
     random(0, LenListTokemon, Pick),
     take(ListTokemon, Pick, NameTokemon),
     write('A wild Tokemon appears!'), nl,
-    write('Fight or Run?'), nl,
+    write('It is '),
+    write(NameTokemon),
+    write('!'),nl,
+    write('Fight or Run?'),nl,
     retract(status(roam)),
     asserta(status(battle)),
     asserta(encounter(NameTokemon)), !.
@@ -170,9 +173,12 @@ printInventory :-
     write(ListTokemon).
 
 heal :- 
+    hasHealed,
+    write('You have already healed your tokemon before!'),nl, !.
+heal :- 
     posPlayer(XPlayer, YPlayer), 
     \+(gym(XPlayer, YPlayer)),
-    write("You are not in a gym"),
+    write('You are not in a gym! Go to a gym if you want to heal your tokemon :] '),
     nl,
     !.
 heal :-
