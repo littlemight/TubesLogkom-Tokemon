@@ -6,17 +6,17 @@ save(_) :-
  \+status(_),
  write('Kamu belum main nih, mau save apaan??'), nl, !.
 
-# save(_) :-
-#     saved(_),
-#     write('File sudah disave hehe'), nl, !.
+% save(_) :-
+%     saved(_),
+%     write('File sudah disave hehe'), nl, !.
 
 save(FileName) :-
-    # \+ saved(_),
+    % \+ saved(_),
         tell(FileName),
             writeMap,
             writeInventory,
         told, !. 
-    # !, saved(1).
+    % !, saved(1).
 
 
 writeMap:-
