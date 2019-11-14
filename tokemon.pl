@@ -32,10 +32,11 @@ normal(tudecu).
 normal(pilbet).
 normal(jopan).
 
-starter(jones).
-starter(mitel).
-starter(yoga).
-starter(arip).
+%starter(jones).
+%starter(mitel).
+%starter(yoga).
+%starter(arip).
+starter(laron).
 
 maxHealth(bangkumon, 200).
 maxHealth(mejamon, 500).
@@ -592,6 +593,6 @@ decideEnemyBattle :-
 kalah :-
     reset,
     write('Wah kamu kalah, cupu sih, ayo coba lagi!'),nl,
-    write('Tulis Start untuk memulai game kembali!!'),!.
+    write('Tulis Start untuk memulai game kembali!!'), nl, !.
     
 

@@ -14,7 +14,6 @@ command(quit).
 command(w). command(a). command(s). command(d).
 command(map).
 command(heal).
-command(status).
 command(pick(_)).
 command(attack).
 command(specialAttack).
@@ -26,12 +25,15 @@ command(drop(_)).
 command(hesoyam).
 command(tokemonTingle).
 command(status(_)).
+command(status).
+command(listing).
 
 processInput(X) :- \+command(X), write('Invalid command!'), nl.
 processInput(X) :- command(X), X.
 
 start :- status(_), write('You have already started the game!'),!, fail.
 start :-
+    reset,
     write('                  ___            ___           ___           ___           ___           ___ '),nl,
     write('      ___        /  /\\         /__/|         /  /\\         /__/\\         /  /\\         /__/\\ '),nl,   
     write('     /  /\\     /  /::\\        |  |:|        /  /:/_       |  |::\\       /  /::\\        \\  \\:\\ '),nl, 
@@ -51,10 +53,10 @@ start :-
 	asserta(status(roam)),
     initMap,
     random(5, 10, N),
+    initPlayer,
     initNormal(N),
     random(2, 3, NLegendary),
     initLegendary(NLegendary),
-    initPlayer,
     repeat,
         write('>>> '),
         read(X),
