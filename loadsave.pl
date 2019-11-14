@@ -19,7 +19,6 @@ writeMap:-
 writeInventory:-
  forall(tokemon(A,B,C,D,E),(write('tokemon('),write(A),write(','),write(B),write(','),write(C),write(','),write(D),write(','),write(E),write(').'),nl)),
  forall(inventory(X),(write('inventory('),write(X),write(').'),nl)),!.
-
 loadGame(FileName):-
  \+file_exists(FileName),
  write('File not found :) .'), nl, !.
