@@ -479,21 +479,23 @@ enemyAttack :-
     asserta(tokemon(TokemonP, X, Y, HPadd, Ownership)),
     printBattleStatus(TokemonP, Enemy),
     (HPadd =:= 0 ->
-        write('Tokemon kita kalah.'),
+        write('Tokemon kamu kalah.'),
+
         nl,
-        (
-            \+inventory(_) ->
-            kalah
-        ),
-        write('Pilih Tokemon lagi'),
-        nl,
+       
         retract(tokemon(TokemonP,_,_,_,_)),
         retract(inventory(TokemonP)),
         retract(battle(TokemonP)),
-        printInventory,
         (
-            special(TokemonP) ->
-            retract(special(TokemonP))
+            \+inventory(_) ->
+            kalah
+            ;write('Pilih Tokemon lagi'),
+        nl,
+        printInventory,
+            (
+                special(TokemonP) ->
+                retract(special(TokemonP))
+            )
         )
     ; retract(tokemon(TokemonP,X,Y,_,Owner)), assertz(tokemon(TokemonP,X,Y,HPnew,Owner))
     ).
@@ -530,19 +532,20 @@ enemySpecialAttack :-
     (HPadd =:= 0 ->
             write('Tokemon kita kalah.'),
             nl,
-            (
-                \+inventory(_) ->
-                kalah
-            ),
-            write('Pilih Tokemon lagi'),
-            nl,
+            
             retract(tokemon(TokemonP,_,_,_,_)),
             retract(inventory(TokemonP)),
             retract(battle(TokemonP)),
-            printInventory,
             (
-                special(TokemonP) ->
-                retract(special(TokemonP))
+            \+inventory(_) ->
+            kalah
+            ; write('Pilih Tokemon lagi'),
+            nl,
+            printInventory,
+                (
+                    special(TokemonP) ->
+                    retract(special(TokemonP))
+                )
             )
         ; retract(tokemon(TokemonP,X,Y,_,Owner)),
         assertz(tokemon(TokemonP,X,Y,HPnew,Owner))
@@ -563,3 +566,4 @@ decideEnemyBattle :-
 kalah :-
     reset,
     write('Wah kamu kalah, cupu sih, ayo coba lagi!').
+
