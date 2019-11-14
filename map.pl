@@ -3,19 +3,45 @@
 :- dynamic(gym/2).
 :- dynamic(fence/2).
 :- dynamic(posPlayer/2).
+:- dynamic(visible/0).
+
+hesoyam :- \+(visible), asserta(visible), write('You can now see all the Tokemons.'), nl, !.
+hesoyam :- visible, retract(visible), write('Now you\'re just a peasant Tokemon trainer.'), nl, !.
 
 initMap :- 
   /* Get Map Size */
-  random(10, 20, H),
-  random(10, 20, W),
+  random(10, 21, H),
+  random(10, 21, W),
   asserta(height(H)),
   asserta(width(W)),
+
+  NRandom is ((H * W) div 15) + 1,
+  random(1, NRandom, NFence),
+  write(NFence), nl,
+  generateFence(NFence),
 
   /* Get Gym Position */
   random(1, H, YGym),
   random(1, W, XGym),
   asserta(gym(XGym, YGym))
   .
+
+generateFence(0) :- !.
+generateFence(_) :-
+  height(H), width(W),
+  random(1, H, YFence), random(1, W, XFence),
+  fence(XFence, YFence), !.
+
+generateFence(N) :-
+  height(H), width(W),
+  repeat,
+    random(1, H, YFence), random(1, W, XFence),
+    (fence(XFence, YFence) -> fail
+    ; asserta(fence(XFence, YFence)), !
+    ),
+  Next is N - 1,
+  generateFence(Next),
+  !.
 
 isEdgeW(_, Y) :- Y =:= 0, !.
 isEdgeA(X, _) :- X =:= 0, !.
@@ -32,6 +58,9 @@ isEdge(X, Y) :- isEdgeW(X, Y); isEdgeA(X, Y); isEdgeS(X, Y); isEdgeD(X, Y).
 printPos(X, Y) :- gym(X, Y), !, write('G').
 printPos(X, Y) :- posPlayer(X, Y), !, write('P').
 printPos(X, Y) :- isEdge(X, Y), !, write('X').
+printPos(X, Y) :- fence(X, Y), !, write('X').
+printPos(X, Y) :- visible, tokemon(Tokemon, X, Y, _, _), normal(Tokemon), write('T').
+printPos(X, Y) :- tokemon(Tokemon, X, Y, _, _), legendary(Tokemon), write('L').
 printPos(_, _) :- write('-'), !.
 
 map :-

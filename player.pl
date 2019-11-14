@@ -3,6 +3,8 @@
 :- dynamic(battle/1). /* battle(Tokemon), sekarang Tokemon apa yang kita pilih buat battle */
 :- dynamic(hasHealed/0).
 
+starterNotSpawned(Tokemon) :- starter(Tokemon), \+(tokemon(Tokemon, _, _, _, _)).
+
 initPlayer :-
     /* Get Player Position */
     height(H),
@@ -12,7 +14,7 @@ initPlayer :-
     asserta(posPlayer(XPlayer, YPlayer)),
     
     /* Pick Unspawned Tokemon */
-    findall(Tokemon, normalNotSpawned(Tokemon), ListTokemon),
+    findall(Tokemon, starterNotSpawned(Tokemon), ListTokemon),
     length(ListTokemon, LenListTokemon),
     random(0, LenListTokemon, Pick),
     take(ListTokemon, Pick, NameTokemon),
@@ -20,18 +22,23 @@ initPlayer :-
     asserta(inventory(NameTokemon)),
     asserta(tokemon(NameTokemon, 0, 0, HealthTokemon, 1)). /* 1 = dimiliki player, (0, 0) soalnya posisinya ga penting) */
     
-w :- \+status(roam), write('waduh sori ga bisa nih gan'),!, fail.
+
+writeNabrak :- write('Ouch, you hit a fence.'), nl.
+writeNorth :- write('You went North.'), nl.
+writeSouth :- write('You went South.'), nl.
+writeEast :- write('You went East.'), nl.
+writeWest :- write('You went West.'), nl.
+
+w :- \+status(roam), write('waduh sori ga bisa nih gan'), nl, !, fail.
 w :-
   retract(posPlayer(X, Y)),
   YNew is Y - 1,
   (
-    Y > 1, \+ (fence(X, YNew)) ->
-    asserta(posPlayer(X, YNew));
-    asserta(posPlayer(X, Y))
-  ),
-  roamAllTokemon,
-  checkEncounter
-  .
+    Y > 1, \+(fence(X, YNew)) ->
+    asserta(posPlayer(X, YNew)), writeNorth, write('...'), nl, sleep(0.5), roamAllTokemon,
+    tokemonTingle, nl, sleep(0.5), checkEncounter
+    ;asserta(posPlayer(X, Y)), writeNabrak
+  ), !.
 
 a :- \+status(roam),  write('waduh sori ga bisa nih gan'),!, fail.
 a :-
@@ -39,12 +46,11 @@ a :-
   XNew is X - 1,
   (
     X > 1, \+(fence(XNew, Y)) ->
-    asserta(posPlayer(XNew, Y));
-    asserta(posPlayer(X, Y))
+    asserta(posPlayer(XNew, Y)), writeWest, write('...'), nl, sleep(0.5), roamAllTokemon,
+    tokemonTingle, nl, sleep(0.5), checkEncounter
+    ;asserta(posPlayer(X, Y)), writeNabrak
   ),
-  roamAllTokemon,
-  checkEncounter
-  .
+  !.
 
 s :- \+status(roam), write('waduh sori ga bisa nih gan'),!, fail.
 s :-
@@ -53,12 +59,11 @@ s :-
   YNew is Y + 1,
   (
     Y < YMax, \+ (fence(X, YNew)) ->
-    asserta(posPlayer(X, YNew));
-    asserta(posPlayer(X, Y))
+    asserta(posPlayer(X, YNew)), writeSouth, write('...'), nl, sleep(0.5), roamAllTokemon,
+    tokemonTingle, nl, sleep(0.5), checkEncounter
+    ;asserta(posPlayer(X, Y)), writeNabrak
   ),
-  roamAllTokemon,
-  checkEncounter 
-  .
+  !.
 
 d :- \+status(roam), write('waduh sori ga bisa nih gan'),!, fail.
 d :-
@@ -67,17 +72,18 @@ d :-
   XNew is X + 1,
   (
     X < XMax, \+(fence(XNew, Y)) ->
-      asserta(posPlayer(XNew, Y))
-    ; asserta(posPlayer(X, Y))
+      asserta(posPlayer(XNew, Y)), writeEast, write('...'), nl, sleep(0.5), roamAllTokemon,
+      tokemonTingle, nl, sleep(0.5), checkEncounter
+    ; asserta(posPlayer(X, Y)), writeNabrak
   ),
-  roamAllTokemon,
-  checkEncounter
-  .
+  !.
 
 sizeInventory(Size) :-
     findall(Tokemon, inventory(Tokemon), ListTokemon),
     length(ListTokemon, Size).
 
+pick(_) :- \+(encounter(_)), write('You\'re not in battle!'), nl, !.
+pick(Tokemon) :- battle(Tokemon), write('You already picked that Tokemon!'), nl, !.
 pick(Tokemon) :- 
     (inventory(Tokemon) ->
         format('You : \"~w I choose you!\"', [Tokemon]), nl, nl,
@@ -126,11 +132,12 @@ checkEncounter :-
     asserta(status(battle)),
     asserta(encounter(NameTokemon)), !.
 
+run :- \+(encounter(_)), write('You\'re not facing a Tokemon!'), nl, !.
 run :-
     encounter(Tokemon),
     \+(battle(_)),
     random(1, 101, RNG),
-    (RNG =< 40 ->
+    (RNG =< 20 ->
         write('You successfully escaped the Tokemon!'), nl, retract(encounter(Tokemon)),
         retract(status(battle)),
         asserta(status(roam)),
@@ -139,13 +146,13 @@ run :-
             retract(special(Tokemon))
         )
     ;   write('You failed to run!'), nl, decideEnemyBattle
-    ).
+    ), !.
 
 run :-
     encounter(Tokemon),
     battle(TokemonPlayer),
     random(1, 101, RNG),
-    (RNG =< 10 ->
+    (RNG =< 20 ->
         write('You successfully escaped the Tokemon!'), nl, retract(encounter(Tokemon)),
         retract(battle(TokemonPlayer)),
         retract(status(battle)),
@@ -159,8 +166,10 @@ run :-
             retract(special(TokemonPlayer))
         )
     ;   write('You failed to run!'), nl, fight
-    ).
+    ), !.
 
+fight :- \+(encounter(_)), write('You\'re not in battle!'), nl, !.
+fight :- battle(_), write('Proceed with the battle!'), nl, !.
 fight :-
     write('Choose your Tokemon!'), nl,
     write('Available Tokemons: '), printInventory, nl.
@@ -175,6 +184,11 @@ heal :-
     write("You are not in a gym"),
     nl,
     !.
+heal :-
+    posPlayer(XPlayer, YPlayer),
+    gym(XPlayer, YPlayer),
+    hasHealed,
+    write("You already used this gym!"), !.
 heal :-
     asserta(hasHealed),
     findall(Tokemon, inventory(Tokemon), ListTokemon),

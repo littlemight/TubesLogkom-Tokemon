@@ -3,11 +3,32 @@
 :- include('tokemon.pl').
 :- include('player.pl').
 :- include('help.pl').
-:- dynamic(status/1).
 :- include('loadsave.pl').
+:- include('compass.pl').
+:- dynamic(status/1).
 
 /* STATUS : KONDISI PERMAINAN */
+command(start).
+command(help).
+command(quit).
+command(w). command(a). command(s). command(d).
+command(map).
+command(heal).
+command(status).
+command(pick(_)).
+command(attack).
+command(specialAttack).
+command(fight).
+command(run).
+command(capture).
+command(ignore).
+command(drop(_)).
+command(hesoyam).
+command(tokemonTingle).
+command(status(_)).
 
+processInput(X) :- \+command(X), write('Invalid command!'), nl.
+processInput(X) :- command(X), X.
 
 start :- status(_), write('You have already started the game!'),!, fail.
 start :-
@@ -33,8 +54,14 @@ start :-
     initNormal(N),
     random(2, 3, NLegendary),
     initLegendary(NLegendary),
-    initPlayer
-    .
+    initPlayer,
+    repeat,
+        write('>>> '),
+        read(X),
+        processInput(X),
+        nl, X = quit
+    , !.
+
 quit :-
     reset,
     write('Kau keluar dari game :))').
