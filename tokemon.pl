@@ -371,7 +371,7 @@ ignore :- /* ignore == mati */
     retract(battle(_)).
 
 % PLAYER
-attack :- \+status(battle), write('waduh sori ga bisa nih gan'),!, fail.
+attack :- \+status(battle), write('Sorry! You cannot do that for now. '),!, fail.
 attack :- \+(battle(_)), write('Pilih Tokemon terlebih dahulu!'), !.
 attack :- encounter(Tokemon), tokemon(Tokemon, _, _, HP, _), HP =:= 0, write('Have some mercy.'), nl, !.
 attack :-
@@ -591,4 +591,7 @@ decideEnemyBattle :-
 % LOSING CONDITION
 kalah :-
     reset,
-    write('Wah kamu kalah, cupu sih, ayo coba lagi!').
+    write('Wah kamu kalah, cupu sih, ayo coba lagi!'),nl,
+    write('Tulis Start untuk memulai game kembali!!'),!.
+    
+
