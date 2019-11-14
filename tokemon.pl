@@ -1,3 +1,4 @@
+:- include('tools.pl').
 
 /* tokemon(NameTokemon, XPos, YPos, Health, Ownership) */
 /* Ownership = 0 -- Roaming
@@ -12,7 +13,7 @@
 /* skill(NamaTokemon,NamaSkill,JumlahDamage) */
 
 /* special(NamaTokemon) */
-:- dynamic(tokemon/5).
+:- dynamic(tokemon/5). 
 :- dynamic(special/1). /* special(Tokemon), Tokemon udah pake special atau belum */
 
 /* DATABASE KENTANG */
@@ -362,12 +363,18 @@ attack :-
         ; damage(TokemonP,Atk),
         AtkAtribut is Atk
     ),
-    tokemon(Enemy,_,_,HP,_),
+    tokemon(Enemy,X,Y,HP,Ownership),
     printPlayerDamage(AtkAtribut, Enemy), nl,
-    printBattleStatus(TokemonP, Enemy),
+    retract(tokemon(Enemy, X, Y, HP, Ownership)),
     HPnew is HP - AtkAtribut,
+    (HPnew < 0 ->
+        HPadd is 0
+    ; HPadd is HPnew
+    ),
+    asserta(tokemon(Enemy, X, Y, HPadd, Ownership)),
+    printBattleStatus(TokemonP, Enemy),
     (
-        HPnew =< 0 ->
+        HPadd =:= 0 ->
         write('Musuh kalah.'),
         nl,
         write('Tangkep ga?'),
@@ -384,8 +391,12 @@ attack :-
         )
         ; retract(tokemon(Enemy,X,Y,_,Owner)),
         assertz(tokemon(Enemy,X,Y,HPnew,Owner))
-    ), decideEnemyBattle, !.
-
+    ),
+    (HPadd > 0 ->
+        decideEnemyBattle, !
+    ; !
+    ).
+    
 specialAttack :- \+status(battle), write('waduh sori ga bisa nih gan'),!, fail.
 specialAttack :- \+(battle(_)), write('Pilih Tokemon terlebih dahulu!'), !.
 specialAttack :- battle(TokemonP), special(TokemonP), write('Special attacks can only be used once per battle!'), !, fail.
@@ -409,6 +420,7 @@ specialAttack :-
     tokemon(Enemy,_,_,HP,_),
     HPnew is HP - AtkAtribut,
     printSpecialAttackMessage(TokemonP, Jurus), nl,
+    printPlayerDamage(AtkAtribut,Enemy),nl,
     printBattleStatus(TokemonP, Enemy),
     (HPnew =< 0 ->
         write('Musuh kalah.'),
@@ -453,6 +465,10 @@ enemyAttack :-
         HPnew =< 0 ->
             write('Tokemon kita kalah.'),
             nl,
+            (
+                \+inventory(_) ->
+                kalah
+            ),
             write('Pilih Tokemon lagi'),
             nl,
             retract(tokemon(TokemonP,_,_,_,_)),
@@ -467,7 +483,7 @@ enemyAttack :-
         assertz(tokemon(TokemonP,X,Y,HPnew,Owner))
     ).
 
-enemySpecialAttack :- encounter(Enemy), special(Enemy), write('waduh sori ga bisa nih gan'), !, fail.
+enemySpecialAttack :- encounter(Enemy), special(Enemy), format('~w cannot use is special attack anymore!',[Enemy]), !, fail.
 enemySpecialAttack :-
     battle(TokemonP),
     encounter(Enemy),
@@ -486,13 +502,17 @@ enemySpecialAttack :-
         AtkAtribut is Atk
     ),
     tokemon(TokemonP,_,_,HP,_),
-    printSpecialAttackMessage(TokemonP, Jurus), nl, 
+    printSpecialAttackMessage(Enemy, Jurus), nl, 
     printEnemyDamage(Enemy, AtkAtribut, TokemonP), nl,
     printBattleStatus(TokemonP, Enemy),
     HPnew is HP - AtkAtribut,
     (HPnew =< 0 ->
             write('Tokemon kita kalah.'),
             nl,
+            (
+                \+inventory(_) ->
+                kalah
+            ),
             write('Pilih Tokemon lagi'),
             nl,
             retract(tokemon(TokemonP,_,_,_,_)),
@@ -517,3 +537,8 @@ decideEnemyBattle :-
     ).
 % END OF RNG BEHAVIOUR
 /* END OF TOKEMON BATTLE BEHAVIOUR */
+
+% LOSING CONDITION
+kalah :-
+    reset,
+    write('Wah kamu kalah, cupu sih, ayo coba lagi!').

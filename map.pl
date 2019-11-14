@@ -32,7 +32,6 @@ isEdge(X, Y) :- isEdgeW(X, Y); isEdgeA(X, Y); isEdgeS(X, Y); isEdgeD(X, Y).
 printPos(X, Y) :- gym(X, Y), !, write('G').
 printPos(X, Y) :- posPlayer(X, Y), !, write('P').
 printPos(X, Y) :- isEdge(X, Y), !, write('X').
-printPos(X, Y) :- tokemon(_, X, Y, _, _), !, write('T').
 printPos(_, _) :- write('-'), !.
 
 map :-
