@@ -67,6 +67,8 @@ start :-
         nl, X = quit
     , !.
 
+quit :- \+status(_), write('You have not started any game yet!'),nl,!.
+
 quit :-
     reset,
     write('You quit the game').
