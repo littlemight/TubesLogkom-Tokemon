@@ -1,9 +1,9 @@
 
-save(_) :-
+saveGame(_) :-
  \+status(_),
- write('Kamu belum main nih, mau save apaan??'), nl, !.
+ write('You must play the game to save'), nl, !.
 
-save(FileName) :-
+saveGame(FileName) :-
         tell(FileName),
             writeMap,nl,
             writeInventory,

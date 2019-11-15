@@ -48,9 +48,10 @@ start :-
     write('       \\__\\/    \\  \\::/       \\  \\:\\        \\  \\::/       \\  \\:\\        \\  \\::/       \\  \\:\\    '),nl,
     write('                 \\__\\/         \\__\\/         \\__\\/         \\__\\/         \\__\\/         \\__\\/    '),nl,nl,
 
-	write('Selamat datang di Tokemon 10.0, game ini tidak ada hubungannya sama sekali dengan *okemon :)'), nl,
-	write('Tokemon-tokemon yang ada di database sangat bervariasi, dan pada awal game diberikan random kepada pemain'), nl,
-	write('Jadi kalau dapet tokemon yang cupu restart aja ya game-nya hehehehe'),nl,
+    write('Welcome to Tokemon 10.0, this game has no connection whatsoever with P*okemon :)'), nl,
+    write('You will be given a random tokemon at the start of the game, it may be strong, it may be weak'), nl,
+    write('If your tokemon is weak af, just restart the game'), nl,
+
 	help,
 	asserta(status(roam)),
     initMap,
@@ -68,4 +69,4 @@ start :-
 
 quit :-
     reset,
-    write('Kau keluar dari game :))').
+    write('You quit the game').

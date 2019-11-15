@@ -356,7 +356,7 @@ capture :-
     write('You cannot capture another Tokemon! You have to drop one first.'), nl, !.
 capture :-
     retract(encounter(Enemy)),
-    format('~w is captured!', [Enemy]),
+    format('~w is captured!', [Enemy]), nl,
     retract(tokemon(Enemy,X,Y,_,_)),
     maxHealth(Enemy, MaxHP),
     asserta(tokemon(Enemy,X,Y,MaxHP,1)),
@@ -380,7 +380,7 @@ ignore :- /* ignore == mati */
 
 % PLAYER
 attack :- \+status(battle), write('Sorry! You cannot do that for now. '),!, fail.
-attack :- \+(battle(_)), write('Pilih Tokemon terlebih dahulu!'), !.
+attack :- \+(battle(_)), write('Pick a Tokemon!'), !.
 attack :- encounter(Tokemon), tokemon(Tokemon, _, _, HP, _), HP =:= 0, write('Have some mercy.'), nl, !.
 attack :-
     battle(TokemonP),
@@ -435,7 +435,7 @@ attack :-
     ).
     
 specialAttack :- \+(status(battle)), write('Sorry! You cannot do that for now.'), nl, !, fail.
-specialAttack :- \+(battle(_)), write('Pilih Tokemon terlebih dahulu!'), nl, !.
+specialAttack :- \+(battle(_)), write('Pick a Tokemon!'), nl, !.
 specialAttack :- encounter(Tokemon), tokemon(Tokemon, _, _, HP, _), HP =:= 0, write('Have some mercy.'), nl, !.
 specialAttack :- battle(TokemonP), special(TokemonP), write('Special attacks can only be used once per battle!'), nl, !, fail.
 specialAttack :-
@@ -601,8 +601,8 @@ decideEnemyBattle :-
 % LOSING CONDITION
 kalah :-
     reset,
-    write('Wah kamu kalah, cupu sih, ayo coba lagi!'),nl,
-    write('Tulis Start untuk memulai game kembali!!'), nl, !.
+    write('You lose! Get gud!!!'),nl,
+    write('Type start to play again!'), nl, !.
 
 % WINNING CONDITION
 menang :- 
