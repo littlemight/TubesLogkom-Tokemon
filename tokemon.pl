@@ -439,46 +439,46 @@ attack :- encounter(Tokemon), tokemon(Tokemon, _, _, HP, _), HP =:= 0, write('Ha
 attack :-
     battle(TokemonP),
     encounter(Enemy),
-    level(TokemonP, Lvl),
+    multiplier(TokemonP, Mult),
     (
         type(TokemonP,fire),type(Enemy,leaves) ->
             damage(TokemonP,Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP,leaves),type(Enemy,water) ->
             damage(TokemonP,Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP,water),type(Enemy,fire) ->
             damage(TokemonP,Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, flying),type(Enemy,leaves) ->
             damage(TokemonP,Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, electric),type(Enemy, water) ->
             damage(TokemonP,Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, ground),type(Enemy,electric) ->
             damage(TokemonP,Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)    
+            AtkAtribut is Mult * (Atk + Atk/2)    
         ; type(TokemonP,leaves),type(Enemy,fire) ->
             damage(TokemonP,Atk),
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP,water),type(Enemy,leaves) ->
             damage(TokemonP,Atk),
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP,fire),type(Enemy,water) ->
             damage(TokemonP,Atk),
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, leaves),type(Enemy,flying) ->
             damage(TokemonP,Atk),
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, water),type(Enemy, electric) ->
             damage(TokemonP,Atk),
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, electric),type(Enemy,ground) ->
             damage(TokemonP,Atk),
-            AtkAtribut is Lvl * (Atk - Atk/2)    
+            AtkAtribut is Mult * (Atk - Atk/2)    
         ; damage(TokemonP,Atk),
-        AtkAtribut is Lvl * Atk
+        AtkAtribut is Mult * Atk
     ),
     tokemon(Enemy,X,Y,HP,Ownership),
     printPlayerDamage(AtkAtribut, Enemy), nl,
@@ -493,13 +493,8 @@ attack :-
     (
         HPadd =:= 0 ->
         retract(level(TokemonP, Lvl)),
-        (
-            legendary(Enemy) ->
-            Lvlnew is Lvl + 2
-            ;
-            Lvlnew is Lvl + 1
-        ),
-        asserta(level(TokemonP,Lvlnew)),
+        expGain(TokemonP, Enemy, Exp),
+        asserta(level(TokemonP, Exp)),
         format('~w fainted.', [Enemy]),
         nl,
         write('Capture?'),
@@ -536,30 +531,30 @@ specialAttack :-
     level(TokemonP, Lvl),
     (   
         type(TokemonP,fire),type(Enemy,leaves) ->
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP,leaves),type(Enemy,water) ->
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP,water),type(Enemy,fire) ->
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, flying),type(Enemy,leaves) ->
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, electric),type(Enemy, water) ->
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, ground),type(Enemy,electric) ->
-            AtkAtribut is Lvl * (Atk + Atk/2)  
+            AtkAtribut is Mult * (Atk + Atk/2)  
         ; type(TokemonP,leaves),type(Enemy,fire) ->
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP,water),type(Enemy,leaves) ->
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP,fire),type(Enemy,water) ->
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, leaves),type(Enemy,flying) ->
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, water),type(Enemy, electric) ->
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, electric),type(Enemy,ground) ->
-            AtkAtribut is Lvl * (Atk - Atk/2)  
-        ; AtkAtribut is Lvl * Atk
+            AtkAtribut is Mult * (Atk - Atk/2)  
+        ; AtkAtribut is Mult * Atk
     ),
     tokemon(Enemy,X,Y,HP,Ownership),
     printSpecialAttackMessage(TokemonP, Jurus), nl,
@@ -574,15 +569,11 @@ specialAttack :-
     ),
     asserta(tokemon(Enemy, X, Y, HPadd, Ownership)),
     printBattleStatus(TokemonP, Enemy),
-    (HPadd =:= 0 ->
+    (
+        HPadd =:= 0 ->
         retract(level(TokemonP, Lvl)),
-        (
-            legendary(Enemy) ->
-            Lvlnew is Lvl + 2
-            ;
-            Lvlnew is Lvl + 1
-        ),
-        asserta(level(TokemonP,Lvlnew)),
+        expGain(TokemonP, Enemy, Exp),
+        asserta(level(TokemonP, Exp)),
         format('~w fainted', [Enemy]),
         nl,
         write('Capture?'),
