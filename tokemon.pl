@@ -37,9 +37,9 @@ starter(mitel).
 starter(yoga).
 starter(arip).
 
-maxHealth(bangkumon, 2).
-maxHealth(mejamon, 5).
-maxHealth(zhafransyah, 5).
+maxHealth(bangkumon, 200).
+maxHealth(mejamon, 500).
+maxHealth(zhafransyah, 500).
 maxHealth(vegan, 9).
 maxHealth(fabian, 150).
 maxHealth(jones, 75).
@@ -54,18 +54,18 @@ maxHealth(jopan, 130).
 
 type(bangkumon, fire).
 type(mejamon, water).
-type(zhafransyah, fire).
-type(vegan, leaves).
+type(zhafransyah, electric).
+type(vegan, ground).
 type(fabian, water).
-type(jones, leaves).
+type(jones, flying).
 type(mitel, fire).
 type(yoga, leaves).
-type(arip, leaves).
-type(laron, fire).
+type(arip, flying).
+type(laron, ground).
 type(azong, water).
-type(tudecu, leaves).
+type(tudecu, electric).
 type(pilbet, fire).
-type(jopan, fire).
+type(jopan, flying).
 
 damage(bangkumon, 35).
 damage(mejamon, 10).
@@ -395,6 +395,15 @@ attack :-
         ; type(TokemonP,water),type(Enemy,fire) ->
             damage(TokemonP,Atk),
             AtkAtribut is Atk + Atk/2
+        ; type(TokemonP, flying),type(Enemy,leaves) ->
+            damage(TokemonP,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(TokemonP, electric),type(Enemy, water) ->
+            damage(TokemonP,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(TokemonP, ground),type(Enemy,electric) ->
+            damage(TokemonP,Atk),
+            AtkAtribut is Atk + Atk/2    
         ; damage(TokemonP,Atk),
         AtkAtribut is Atk
     ),
@@ -450,6 +459,12 @@ specialAttack :-
             AtkAtribut is Atk + Atk/2
         ; type(TokemonP,water),type(Enemy,fire) ->
             AtkAtribut is Atk + Atk/2
+        ; type(TokemonP, flying),type(Enemy,leaves) ->
+            AtkAtribut is Atk + Atk/2
+        ; type(TokemonP, electric),type(Enemy, water) ->
+            AtkAtribut is Atk + Atk/2
+        ; type(TokemonP, ground),type(Enemy,electric) ->
+            AtkAtribut is Atk + Atk/2  
         ; AtkAtribut is Atk
     ),
     tokemon(Enemy,X,Y,HP,Ownership),
@@ -499,6 +514,15 @@ enemyAttack :-
         ; type(Enemy,water),type(TokemonP,fire) ->
             damage(Enemy,Atk),
             AtkAtribut is Atk + Atk/2
+        ; type(Enemy, flying),type(TokemonP,leaves) ->
+            damage(Enemy,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(Enemy, electric),type(TokemonP, water) ->
+            damage(Enemy,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(Enemy, ground),type(TokemonP,electric) ->
+            damage(Enemy,Atk),
+            AtkAtribut is Atk + Atk/2  
         ; damage(Enemy,Atk),
         AtkAtribut is Atk
     ),
@@ -550,6 +574,12 @@ enemySpecialAttack :-
             AtkAtribut is Atk + Atk/2
         ; type(Enemy,water),type(TokemonP,fire) ->
             AtkAtribut is Atk + Atk/2
+        ; type(Enemy, flying),type(TokemonP,leaves) ->
+            AtkAtribut is Atk + Atk/2
+        ; type(Enemy, electric),type(TokemonP, water) ->
+            AtkAtribut is Atk + Atk/2
+        ; type(Enemy, ground),type(TokemonP,electric) ->
+            AtkAtribut is Atk + Atk/2  
         ; AtkAtribut is Atk
     ),
     tokemon(TokemonP,X,Y,HP,Ownership),
