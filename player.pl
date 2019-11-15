@@ -104,14 +104,19 @@ addTokemon(Tokemon) :-
     retract(tokemon(Tokemon, X, Y, Health, _)),
     asserta(tokemon(Tokemon, X, Y, Health, 1)).
 
-dropTokemon(Tokemon) :-
-    \+(inventory(Tokemon)), !, fail.
 
-dropTokemon(Tokemon) :-
-    inventory(Tokemon),
-    retract(tokemon(Tokemon, _, _, Health, _)),
-    posPlayer(XPlayer, YPlayer),
-    asserta(tokemon(Tokemon, XPlayer, YPlayer, Health, 0)).
+drop(Tokemon) :-
+    (inventory(Tokemon) ->
+        retract(inventory(Tokemon)),
+        retract(tokemon(Tokemon, _, _, Health, _)),
+        posPlayer(XPlayer, YPlayer),
+        asserta(tokemon(Tokemon, XPlayer, YPlayer, Health, 0)),
+        (
+            \+inventory(_) ->
+            kalah
+        )
+    ; write('You cannot drop a Tokemon you do not have! '),nl
+    ).
 
 checkEncounter :-
     posPlayer(XPlayer, YPlayer),

@@ -16,8 +16,7 @@ initMap :-
   asserta(width(W)),
 
   NRandom is ((H * W) div 15) + 1,
-  random(1, NRandom, NFence),
-  write(NFence), nl,
+  random(1, NRandom, NFence), nl,
   generateFence(NFence),
 
   /* Get Gym Position */

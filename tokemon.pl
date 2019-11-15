@@ -32,16 +32,15 @@ normal(tudecu).
 normal(pilbet).
 normal(jopan).
 
-%starter(jones).
-%starter(mitel).
-%starter(yoga).
-%starter(arip).
-starter(laron).
+starter(jones).
+starter(mitel).
+starter(yoga).
+starter(arip).
 
-maxHealth(bangkumon, 200).
-maxHealth(mejamon, 500).
-maxHealth(zhafransyah, 1000).
-maxHealth(vegan, 90).
+maxHealth(bangkumon, 2).
+maxHealth(mejamon, 5).
+maxHealth(zhafransyah, 5).
+maxHealth(vegan, 9).
 maxHealth(fabian, 150).
 maxHealth(jones, 75).
 maxHealth(mitel, 120).
@@ -362,14 +361,22 @@ capture :-
     maxHealth(Enemy, MaxHP),
     asserta(tokemon(Enemy,X,Y,MaxHP,1)),
     addTokemon(Enemy),
-    retract(battle(_)).
+    retract(battle(_)),
+    (
+        \+legendaryRoaming(_) ->
+        menang
+    ),!.
 ignore :- \+(encounter(_)), write('You\'re not in battle!'), nl, !.
 ignore :- encounter(Enemy), tokemon(Enemy, _, _, HP, _), HP > 0, write('You have to defeat the Tokemon first!'), nl, !.
 ignore :- /* ignore == mati */
     retract(encounter(Enemy)),
     format('~w ran away.', [Enemy]), nl, 
     retract(tokemon(Enemy,_,_,_,_)),
-    retract(battle(_)).
+    retract(battle(_)),
+    (
+        \+legendaryRoaming(_) ->
+        menang
+    ),!.
 
 % PLAYER
 attack :- \+status(battle), write('Sorry! You cannot do that for now. '),!, fail.
@@ -420,13 +427,14 @@ attack :-
         asserta(status(roam))
         ; retract(tokemon(Enemy,X,Y,_,Owner)),
         assertz(tokemon(Enemy,X,Y,HPnew,Owner))
+        
     ),
     (HPadd > 0 ->
         sleep(2), decideEnemyBattle, !
     ; !
     ).
     
-specialAttack :- \+(status(battle)), write('waduh sori ga bisa nih gan'), nl, !, fail.
+specialAttack :- \+(status(battle)), write('Sorry! You cannot do that for now.'), nl, !, fail.
 specialAttack :- \+(battle(_)), write('Pilih Tokemon terlebih dahulu!'), nl, !.
 specialAttack :- encounter(Tokemon), tokemon(Tokemon, _, _, HP, _), HP =:= 0, write('Have some mercy.'), nl, !.
 specialAttack :- battle(TokemonP), special(TokemonP), write('Special attacks can only be used once per battle!'), nl, !, fail.
@@ -468,6 +476,7 @@ specialAttack :-
         ), retract(status(_)), asserta(status(roam)), retract(special(TokemonP))
         ; retract(tokemon(Enemy,X,Y,_,Owner)),
         assertz(tokemon(Enemy,X,Y,HPnew,Owner))
+        
     ),
     (HPadd > 0 ->
         sleep(2), decideEnemyBattle, !
@@ -506,7 +515,7 @@ enemyAttack :-
     asserta(tokemon(TokemonP, X, Y, HPadd, Ownership)),
     printBattleStatus(TokemonP, Enemy),
     (HPadd =:= 0 ->
-        write('Tokemon kamu kalah.'),
+        write('Your Tokemon loses!'),
         nl,
         retract(tokemon(TokemonP,_,_,_,_)),
         retract(inventory(TokemonP)),
@@ -514,7 +523,7 @@ enemyAttack :-
         (
             \+inventory(_) ->
             kalah
-            ;write('Pilih Tokemon lagi'),
+            ;write('Choose another pokemon! '),
         nl,
         printInventory,
             (
@@ -557,7 +566,7 @@ enemySpecialAttack :-
     asserta(tokemon(TokemonP, X, Y, HPadd, Ownership)),
     printBattleStatus(TokemonP, Enemy),
     (HPadd =:= 0 ->
-            write('Tokemon kita kalah.'),
+            write('Your Tokemon loses! '),
             nl,
             
             retract(tokemon(TokemonP,_,_,_,_)),
@@ -566,7 +575,7 @@ enemySpecialAttack :-
             (
             \+inventory(_) ->
             kalah
-            ; write('Pilih Tokemon lagi'),
+            ; write('Choose another tokemon! '),
             nl,
             printInventory,
                 (
@@ -594,5 +603,21 @@ kalah :-
     reset,
     write('Wah kamu kalah, cupu sih, ayo coba lagi!'),nl,
     write('Tulis Start untuk memulai game kembali!!'), nl, !.
-    
+
+% WINNING CONDITION
+menang :- 
+    reset,
+    write('JENG JENG JENG JENG '),nl,
+    sleep(1),
+    write('  __ __   ___   __ __      __    __  ____  ____       ______  __ __    ___       ____   ____  ___ ___    ___      __   '),nl,
+    write(' |  |  | /   \\ |  |  |    |  |__|  ||    ||    \\     |      ||  |  |  /  _]     /    | /    ||   |   |  /  _]    |  | '),nl,
+    write(' |  |  ||     ||  |  |    |  |  |  | |  | |  _  |    |      ||  |  | /  [_     |   __||  o  || _   _ | /  [_     |  | '),nl,
+    write(' |  ~  ||  O  ||  |  |    |  |  |  | |  | |  |  |    |_|  |_||  _  ||    _]    |  |  ||     ||  \\_/  ||    _]    |__| '),nl,
+    write(' |___, ||     ||  :  |    |  `     | |  | |  |  |      |  |  |  |  ||   [_     |  |_ ||  _  ||   |   ||   [_      __  '),nl,
+    write(' |     ||     ||     |     \\      /  |  | |  |  |      |  |  |  |  ||     |    |     ||  |  ||   |   ||     |    |  | '),nl,
+    write(' |____/  \\___/  \\__,_|      \\_/\\_/  |____||__|__|      |__|  |__|__||_____|    |___,_||__|__||___|___||_____|    |__| '),nl,
+                                                                                                                    
+
+    write('Congratulations !! Write start if you want to play again!! '),!.
+
 

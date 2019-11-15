@@ -27,11 +27,13 @@ command(tokemonTingle).
 command(status(_)).
 command(status).
 command(listing).
+command(save(_)).
+command(load(_)).
 
 processInput(X) :- \+command(X), write('Invalid command!'), nl.
 processInput(X) :- command(X), X.
 
-start :- status(_), write('You have already started the game!'),!, fail.
+start :- status(_), write('You have already started the game!'),nl,!, fail.
 start :-
     reset,
     write('                  ___            ___           ___           ___           ___           ___ '),nl,
