@@ -18,100 +18,219 @@
 :- dynamic(level/2). /* level(Tokemon, lvl), Level dari tokemon */
 
 /* DATABASE KENTANG */
-legendary(mamon).           legendary(kumon).           evolveto(mamon, kumon).
-legendary(tokek).           legendary(tokai).           evolveto(tokek, tokai).
-legendary(zhafransyah).     legendary(sultan).          evolveto(zhafransyah, sultan).
-legendary(vegan).           legendary(cogan).           evolveto(vegan, cogan).
-normal(fabian).             normal(fabiun).             evolveto(fabian, fabiun).
-normal(jones).              normal(jones2).             evolveto(jones, jones2).
-normal(mitel).              normal(miteru).             evolveto(mitel, miteru).
-normal(yogay).              normal(magay).              evolveto(yogay, magay).
-normal(arip).               normal(pari).               evolveto(arip, pari).
-normal(laron).              normal(mawut).              evolveto(laron, mawut).
-normal(azong).              normal(azab).               evolveto(azong, azab).
-normal(tudecu).             normal(paranicu).           evolveto(tudecu, paranicu).
-normal(pilbet).             normal(pilbat).             evolveto(pilbet, pilbat).
-normal(jopan).              normal(jepun).              evolveto(jopan, jepun).
+/* basic tokemon */
+legendary(mamon).                      
+legendary(tokekmon).                      
+legendary(zhafransyah).               
+legendary(vegan).                      
+normal(fabian).                          
+normal(jones).                           
+normal(mitel).                           
+normal(yogay).                            
+normal(arip).                              
+normal(laron).                            
+normal(azong).                             
+normal(tudecu).                        
+normal(pilbet).                          
+normal(jopan).                            
 
+/* evolved tokemon */
+legendary(kumon).
+legendary(tokekmon).
+legendary(sultan).
+legendary(cogan).
+normal(fabiun).
+normal(jones2).
+normal(miteru).
+normal(magay).
+normal(pari).
+normal(mawut).
+normal(azab).
+normal(paranicu).
+normal(pilbat).
+normal(jepun).
+
+/* evolveto */
+evolveto(mamon, kumon).
+evolveto(tokekmon, tokaimon).
+evolveto(zhafransyah, sultan).
+evolveto(vegan, cogan).
+evolveto(fabian, fabiun).
+evolveto(jones, jones2).
+evolveto(mitel, miteru).
+evolveto(yogay, magay).
+evolveto(arip, pari).
+evolveto(laron, mawut).
+evolveto(azong, azab).
+evolveto(tudecu, paranicu).
+evolveto(pilbet, pilbat).
+evolveto(jopan, jepun).
+
+/* starter tokemon */
 starter(jones).
 starter(mitel).
 starter(yogay).
 starter(arip).
 
-level(mamon,1).             level(kumon, 4).
-level(tokek,1).             level(tokai, 4).
-level(zhafransyah,1).       level(sultan, 4).
-level(vegan,1).             level(cogan, 4).
-level(fabian,1).            level(fabiun, 4).
-level(jones,1).             level(jones2, 4).
-level(mitel,1).             level(miteru, 4).
-level(yogay,1).             level(magay, 4).
-level(arip,1).              level(pari, 4).
-level(laron,1).             level(mawut, 4).
-level(azong,1).             level(azab, 4).
-level(tudecu,1).            level(paranicu, 4).
-level(pilbet,1).            level(pilbat, 4).
-level(jopan,1).             level(jepun, 4).
+/* level basic tokemon */
+level(mamon,1).             
+level(tokekmon,1).          
+level(zhafransyah,1).       
+level(vegan,1).             
+level(fabian,1).            
+level(jones,1).             
+level(mitel,1).             
+level(yogay,1).             
+level(arip,1).              
+level(laron,1).             
+level(azong,1).             
+level(tudecu,1).            
+level(pilbet,1).            
+level(jopan,1).         
+
+/* level evolved tokemon */
+level(kumon, 4).
+level(tokaimon, 4).
+level(sultan, 4).
+level(cogan, 4).
+level(fabiun, 4).
+level(jones2, 4).
+level(miteru, 4).
+level(magay, 4).
+level(pari, 4).
+level(mawut, 4).
+level(azab, 4).
+level(paranicu, 4).
+level(pilbat, 4).
+level(jepun, 4).
     
-maxHealth(mamon, 200).          maxHealth(kumon, 400).
-maxHealth(tokek, 200).          maxHealth(tokai, 400).
-maxHealth(zhafransyah, 300).    maxHealth(sultan, 600).
-maxHealth(vegan, 10).           maxHealth(cogan, 50).
-maxHealth(fabian, 150).         maxHealth(fabiun, 300).
-maxHealth(jones, 150).          maxHealth(jones2, 300).
-maxHealth(mitel, 100).          maxHealth(miteru, 200).
-maxHealth(yogay, 250).          maxHealth(magay, 500).
-maxHealth(arip, 120).           maxHealth(pari, 240).
-maxHealth(laron, 10).           maxHealth(mawut, 20).
-maxHealth(azong, 130).          maxHealth(azab, 300).
-maxHealth(tudecu, 90).          maxHealth(paranicu, 200).
-maxHealth(pilbet, 110).         maxHealth(pilbat, 250).
-maxHealth(jopan, 140).          maxHealth(jepun, 300)
+/* maxHealth basic tokemon */
+maxHealth(mamon, 200).          
+maxHealth(tokekmon, 200).       
+maxHealth(zhafransyah, 300).    
+maxHealth(vegan, 10).           
+maxHealth(fabian, 150).         
+maxHealth(jones, 150).          
+maxHealth(mitel, 100).          
+maxHealth(yogay, 250).          
+maxHealth(arip, 120).           
+maxHealth(laron, 10).           
+maxHealth(azong, 130).          
+maxHealth(tudecu, 90).          
+maxHealth(pilbet, 110).         
+maxHealth(jopan, 140).          
 
-type(mamon, fire).              type(kumon, fire).
-type(tokek, water).             type(tokai, water).
-type(zhafransyah, electric).    type(sultan, electric).
-type(vegan, ground).            type(cogan, ground).
-type(fabian, water).            type(fabiun, water).
-type(jones, ground).            type(jones2, ground).
-type(mitel, fire).              type(miteru, fire).
-type(yogay, leaves).            type(magay, leaves),
-type(arip, flying).             type(pari, flying).
-type(laron, ground).            type(mawut, ground).
-type(azong, water).             type(azab, water).
-type(tudecu, electric).         type(paranicu, electric).
-type(pilbet, fire).             type(pilbat, water).
-type(jopan, leaves).            type(jepun, leaves).
+/* maxhealth evolved tokemon */
+maxHealth(kumon, 400).
+maxHealth(tokaimon, 400).
+maxHealth(sultan, 600).
+maxHealth(cogan, 50).
+maxHealth(fabiun, 300).
+maxHealth(jones2, 300).
+maxHealth(miteru, 200).
+maxHealth(magay, 500).
+maxHealth(pari, 240).
+maxHealth(mawut, 20).
+maxHealth(azab, 300).
+maxHealth(paranicu, 200).
+maxHealth(pilbat, 250).
+maxHealth(jepun, 300).
 
-damage(mamon, 30).              damage(kumon, 60).
-damage(tokek, 25).              damage(tokai, 50).
-damage(zhafransyah, 30).        damage(sultan, 60).
-damage(vegan, 50).              damage(cogan, 100).
-damage(fabian, 30).             damage(fabiun, 60).
-damage(jones, 40).              damage(jones2, 80).
-damage(mitel, 20).              damage(miteru, 40).
-damage(yogay, 25).              damage(magay, 50).
-damage(arip, 30).               damage(pari, 60).
-damage(laron, 1).               damage(mawut, 5).
-damage(azong, 35).              damage(azab, 70).
-damage(tudecu, 30).             damage(paranicu, 60).
-damage(pilbet, 30).             damage(pilbat, 60).
-damage(jopan, 50).              damage(jepun, 100).
+/* type basic tokemon */
+type(mamon, fire).              
+type(tokekmon, water).          
+type(zhafransyah, electric).    
+type(vegan, ground).            
+type(fabian, water).            
+type(jones, ground).            
+type(mitel, fire).              
+type(yogay, leaves).            
+type(arip, flying).             
+type(laron, ground).            
+type(azong, water).             
+type(tudecu, electric).         
+type(pilbet, fire).             
+type(jopan, leaves).     
 
-skill(mamon, sesajen, 60).          skill(kumon, aljabar, 150).
-skill(tokek, mengerang, 60).        skill(tokai, menjerit, 150).
-skill(zhafransyah, ruqyah, 75).     skill(sultan, santet, 150).
-skill(vegan, jamur, 150).            skill(cogan, capcay, 300).
-skill(fabian, berdoa, 70).          skill(fabiun, sembahyang, 140).
-skill(jones, breakdance, 100).       skill(jones2, menggeliat, 200).
-skill(mitel, danusan, 50).          skill(miteru, ntakntul, 100).
-skill(yogay, muntah, 40).           skill(magay, ngambang, 100).
-skill(arip, par, 60).               skill(pari, rap, 120).
-skill(laron, nyampah, 10).          skill(mawut, mati, 20).
-skill(azong, renang, 30).           skill(azab, polo, 70).
-skill(tudecu, nyasar, 60).          skill(paranicu, panik, 120).
-skill(pilbet, flamethrower, 50).    skill(pilbat, waterthrower, 100).
-skill(jopan, sembelit, 20).         skill(jepun, kentut, 70).
+/* type evolved tokemon */
+type(kumon, fire).
+type(tokaimon, water).
+type(sultan, electric).
+type(cogan, ground).
+type(fabiun, water).
+type(jones2, ground).
+type(miteru, fire).
+type(magay, leaves),
+type(pari, flying).
+type(mawut, ground).
+type(azab, water).
+type(paranicu, electric).
+type(pilbat, water).
+type(jepun, leaves).
+
+/* attack basic tokemon */
+damage(mamon, 30).              
+damage(tokekmon, 25).           
+damage(zhafransyah, 30).        
+damage(vegan, 50).              
+damage(fabian, 30).             
+damage(jones, 40).              
+damage(mitel, 20).              
+damage(yogay, 25).              
+damage(arip, 30).               
+damage(laron, 1).               
+damage(azong, 35).              
+damage(tudecu, 30).             
+damage(pilbet, 30).             
+damage(jopan, 50).      
+
+/* attack evolved tokemon */
+damage(kumon, 60).
+damage(tokaimon, 50).
+damage(sultan, 60).
+damage(cogan, 100).
+damage(fabiun, 60).
+damage(jones2, 80).
+damage(miteru, 40).
+damage(magay, 50).
+damage(pari, 60).
+damage(mawut, 5).
+damage(azab, 70).
+damage(paranicu, 60).
+damage(pilbat, 60).
+damage(jepun, 100).
+
+/* specialAttack basic tokemon */ 
+skill(mamon, sesajen, 60).          
+skill(tokekmon, mengerang, 60).     
+skill(zhafransyah, ruqyah, 75).     
+skill(vegan, jamur, 150).           
+skill(fabian, berdoa, 70).          
+skill(jones, breakdance, 100).      
+skill(mitel, danusan, 50).          
+skill(yogay, muntah, 40).           
+skill(arip, par, 60).               
+skill(laron, nyampah, 10).          
+skill(azong, renang, 30).           
+skill(tudecu, nyasar, 60).          
+skill(pilbet, flamethrower, 50).    
+skill(jopan, sembelit, 20).         
+
+/* specialAttack evolved tokemon */
+skill(kumon, aljabar, 150).
+skill(tokaimon, menjerit, 150).
+skill(sultan, santet, 150).
+skill(cogan, capcay, 300).
+skill(fabiun, sembahyang, 140).
+skill(jones2, menggeliat, 200).
+skill(miteru, ntakntul, 100).
+skill(magay, ngambang, 100).
+skill(pari, rap, 120).
+skill(mawut, mati, 20).
+skill(azab, polo, 70).
+skill(paranicu, panik, 120).
+skill(pilbat, waterthrower, 100).
+skill(jepun, kentut, 70).
 /* END OF DATABASE KENTANG */
 
 /* TOKEMON SPAWNS */
