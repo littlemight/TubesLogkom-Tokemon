@@ -27,12 +27,14 @@ command(tokemonTingle).
 command(status(_)).
 command(status).
 command(listing).
+command(save(_)).
+command(load(_)).
 
 processInput(X) :- \+command(X), write('Invalid command!'), nl.
 processInput(X) :- command(X), X.
 processInput(X) :- X = quit, halt, !.
 
-start :- status(_), write('You have already started the game!'),!, fail.
+start :- status(_), write('You have already started the game!'),nl,!, fail.
 start :-
     reset,
     write('                  ___            ___           ___           ___           ___           ___ '),nl,
@@ -47,9 +49,10 @@ start :-
     write('       \\__\\/    \\  \\::/       \\  \\:\\        \\  \\::/       \\  \\:\\        \\  \\::/       \\  \\:\\    '),nl,
     write('                 \\__\\/         \\__\\/         \\__\\/         \\__\\/         \\__\\/         \\__\\/    '),nl,nl,
 
-	write('Selamat datang di Tokemon 10.0, game ini tidak ada hubungannya sama sekali dengan *okemon :)'), nl,
-	write('Tokemon-tokemon yang ada di database sangat bervariasi, dan pada awal game diberikan random kepada pemain'), nl,
-	write('Jadi kalau dapet tokemon yang cupu restart aja ya game-nya hehehehe'),nl,
+    write('Welcome to Tokemon 10.0, this game has no connection whatsoever with P*okemon :)'), nl,
+    write('You will be given a random tokemon at the start of the game, it may be strong, it may be weak'), nl,
+    write('If your tokemon is weak af, just restart the game'), nl,
+
 	help,
 	asserta(status(roam)),
     initMap,
@@ -65,6 +68,8 @@ start :-
         nl, X = quit
     , !.
 
+quit :- \+status(_), write('You have not started any game yet!'),nl,!.
+
 quit :-
     reset,
-    write('Kau keluar dari game :))').
+    write('You quit the game').

@@ -105,14 +105,19 @@ addTokemon(Tokemon) :-
     retract(tokemon(Tokemon, X, Y, Health, _)),
     asserta(tokemon(Tokemon, X, Y, Health, 1)).
 
-dropTokemon(Tokemon) :-
-    \+(inventory(Tokemon)), !, fail.
 
-dropTokemon(Tokemon) :-
-    inventory(Tokemon),
-    retract(tokemon(Tokemon, _, _, Health, _)),
-    posPlayer(XPlayer, YPlayer),
-    asserta(tokemon(Tokemon, XPlayer, YPlayer, Health, 0)).
+drop(Tokemon) :-
+    (inventory(Tokemon) ->
+        retract(inventory(Tokemon)),
+        retract(tokemon(Tokemon, _, _, Health, _)),
+        posPlayer(XPlayer, YPlayer),
+        asserta(tokemon(Tokemon, XPlayer, YPlayer, Health, 0)),
+        (
+            \+inventory(_) ->
+            kalah
+        )
+    ; write('You cannot drop a Tokemon you do not have! '),nl
+    ).
 
 checkEncounter :-
     posPlayer(XPlayer, YPlayer),
@@ -154,9 +159,24 @@ run :-
 
 run :-
     encounter(Tokemon),
-    battle(TokemonPlayer),
+    \+(battle(_)),
     random(1, 101, RNG),
     (RNG =< 20 ->
+        write('You successfully escaped the Tokemon!'), nl, retract(encounter(Tokemon)),
+        retract(status(battle)),
+        asserta(status(roam)),
+        (
+            special(Tokemon) ->
+            retract(special(Tokemon))
+        )
+    ;   write('You failed to run!'), nl, decideEnemyBattle
+    ).
+
+run :-
+    encounter(Tokemon),
+    battle(TokemonPlayer),
+    random(1, 101, RNG),
+    (RNG =< 10 ->
         write('You successfully escaped the Tokemon!'), nl, retract(encounter(Tokemon)),
         retract(battle(TokemonPlayer)),
         retract(status(battle)),

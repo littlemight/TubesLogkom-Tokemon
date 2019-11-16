@@ -15,6 +15,7 @@
 /* special(NamaTokemon) */
 :- dynamic(tokemon/5). 
 :- dynamic(special/1). /* special(Tokemon), Tokemon udah pake special atau belum */
+:- dynamic(level/2). /* level(Tokemon, lvl), Level dari tokemon */
 
 /* DATABASE KENTANG */
 legendary(bangkumon).
@@ -31,26 +32,38 @@ normal(azong).
 normal(tudecu).
 normal(pilbet).
 normal(jopan).
-    
+
+evolveto(jones, napoleon).
+evolveto(arip, pira).
+evolveto(laron, tawon).
+
 starter(jones).
-%starter(mitel).
-%starter(yoga).
-%starter(arip).
-%starter(laron).
+starter(mitel).
+starter(yoga).
+starter(arip).
+
+level(bangkumon,1).
+level(mejamon,1).
+level(zhafransyah,1).
+level(vegan,1).
+level(fabian,1).
+level(jones,1).
+level(mitel,1).
+level(yoga,1).
+level(arip,1).
+level(laron,1).
+level(azong,1).
+level(tudecu,1).
+level(pilbet,1).
+level(jopan,1).
 
 % tokemon evolve jadi apa
 evolveto(bangkumon, evolveBangkumon).
-% level tiap tokemon
-
-%changeTokemon(from) :-
-%    retract(tokemon(from, , , ,,)),
-%    evolveto(from, to),
-%    asserta(tokemon(to , ))
     
 maxHealth(bangkumon, 200). maxHealth(evolveBangkumon, 500).
 maxHealth(mejamon, 500).
-maxHealth(zhafransyah, 1000).
-maxHealth(vegan, 90).
+maxHealth(zhafransyah, 500).
+maxHealth(vegan, 9).
 maxHealth(fabian, 150).
 maxHealth(jones, 750).
 maxHealth(mitel, 120).
@@ -64,18 +77,18 @@ maxHealth(jopan, 130).
 
 type(bangkumon, fire).
 type(mejamon, water).
-type(zhafransyah, fire).
-type(vegan, leaves).
+type(zhafransyah, electric).
+type(vegan, ground).
 type(fabian, water).
-type(jones, leaves).
+type(jones, flying).
 type(mitel, fire).
 type(yoga, leaves).
-type(arip, leaves).
-type(laron, fire).
+type(arip, flying).
+type(laron, ground).
 type(azong, water).
-type(tudecu, leaves).
+type(tudecu, electric).
 type(pilbet, fire).
-type(jopan, fire).
+type(jopan, flying).
 
 damage(bangkumon, 35).
 damage(mejamon, 10).
@@ -112,6 +125,23 @@ skill(jopan, kentut, 55).
 normalNotSpawned(Tokemon) :- normal(Tokemon), \+(tokemon(Tokemon, _, _, _, _)).
 legendaryNotSpawned(Tokemon) :- legendary(Tokemon), \+(tokemon(Tokemon, _, _, _, _)).
 legendaryRoaming(Tokemon) :- legendary(Tokemon), tokemon(Tokemon, _, _, _, 0).
+
+evolve(Tokemon) :- \+evolveto(_), write('waduh sorry gabisa gan !'), nl, !.
+evolve(Tokemon) :- level(Tokemon, X), X<4 , write('waduh sorry gabisa gan!'), nl, !.
+evolve(Tokemon) :- 
+    retract(level(Tokemon, X)),
+    X >= 4,
+    evolveto(Tokemon,Evolved),
+    asserta(level(Evolved,X)),
+    retract(inventory(Tokemon)),
+    retract(tokemon(Tokemon,XPos,YPos,HP,Owner)),
+    asserta(inventory(Evolved)),
+    HPnew is 2 * HP,
+    asserta(tokemon(Evolved,XPos,YPos,HPnew,Owner)),
+    format('~w has evolved to ~w !', [Tokemon, Evolved]),
+    nl.
+
+
 
 initNormal(0) :- !.
 initNormal(N) :-
@@ -366,39 +396,75 @@ capture :-
     write('You cannot capture another Tokemon! You have to drop one first.'), nl, !.
 capture :-
     retract(encounter(Enemy)),
-    format('~w is captured!', [Enemy]),
+    format('~w is captured!', [Enemy]), nl,
     retract(tokemon(Enemy,X,Y,_,_)),
     maxHealth(Enemy, MaxHP),
     asserta(tokemon(Enemy,X,Y,MaxHP,1)),
     addTokemon(Enemy),
-    retract(battle(_)).
+    retract(battle(_)),
+    (
+        \+legendaryRoaming(_) ->
+        menang
+    ),!.
 ignore :- \+(encounter(_)), write('You\'re not in battle!'), nl, !.
 ignore :- encounter(Enemy), tokemon(Enemy, _, _, HP, _), HP > 0, write('You have to defeat the Tokemon first!'), nl, !.
 ignore :- /* ignore == mati */
     retract(encounter(Enemy)),
     format('~w ran away.', [Enemy]), nl, 
     retract(tokemon(Enemy,_,_,_,_)),
-    retract(battle(_)).
+    retract(battle(_)),
+    (
+        \+legendaryRoaming(_) ->
+        menang
+    ),!.
 
 % PLAYER
 attack :- \+status(battle), write('Sorry! You cannot do that for now. '),!, fail.
-attack :- \+(battle(_)), write('Pilih Tokemon terlebih dahulu!'), !.
+attack :- \+(battle(_)), write('Pick a Tokemon!'), !.
 attack :- encounter(Tokemon), tokemon(Tokemon, _, _, HP, _), HP =:= 0, write('Have some mercy.'), nl, !.
 attack :-
     battle(TokemonP),
     encounter(Enemy),
+    level(TokemonP, Lvl),
     (
         type(TokemonP,fire),type(Enemy,leaves) ->
             damage(TokemonP,Atk),
-            AtkAtribut is Atk + Atk/2
+            AtkAtribut is Lvl * (Atk + Atk/2)
         ; type(TokemonP,leaves),type(Enemy,water) ->
             damage(TokemonP,Atk),
-            AtkAtribut is Atk + Atk/2
+            AtkAtribut is Lvl * (Atk + Atk/2)
         ; type(TokemonP,water),type(Enemy,fire) ->
             damage(TokemonP,Atk),
-            AtkAtribut is Atk + Atk/2
+            AtkAtribut is Lvl * (Atk + Atk/2)
+        ; type(TokemonP, flying),type(Enemy,leaves) ->
+            damage(TokemonP,Atk),
+            AtkAtribut is Lvl * (Atk + Atk/2)
+        ; type(TokemonP, electric),type(Enemy, water) ->
+            damage(TokemonP,Atk),
+            AtkAtribut is Lvl * (Atk + Atk/2)
+        ; type(TokemonP, ground),type(Enemy,electric) ->
+            damage(TokemonP,Atk),
+            AtkAtribut is Lvl * (Atk + Atk/2)    
+        ; type(TokemonP,leaves),type(Enemy,fire) ->
+            damage(TokemonP,Atk),
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP,water),type(Enemy,leaves) ->
+            damage(TokemonP,Atk),
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP,fire),type(Enemy,water) ->
+            damage(TokemonP,Atk),
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP, leaves),type(Enemy,flying) ->
+            damage(TokemonP,Atk),
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP, water),type(Enemy, electric) ->
+            damage(TokemonP,Atk),
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP, electric),type(Enemy,ground) ->
+            damage(TokemonP,Atk),
+            AtkAtribut is Lvl * (Atk - Atk/2)    
         ; damage(TokemonP,Atk),
-        AtkAtribut is Atk
+        AtkAtribut is Lvl * Atk
     ),
     tokemon(Enemy,X,Y,HP,Ownership),
     printPlayerDamage(AtkAtribut, Enemy), nl,
@@ -412,6 +478,14 @@ attack :-
     printBattleStatus(TokemonP, Enemy),
     (
         HPadd =:= 0 ->
+        retract(level(TokemonP, Lvl)),
+        (
+            legendary(Enemy) ->
+            Lvlnew is Lvl + 2
+            ;
+            Lvlnew is Lvl + 1
+        ),
+        asserta(level(TokemonP,Lvlnew)),
         format('~w fainted.', [Enemy]),
         nl,
         write('Capture?'),
@@ -429,14 +503,15 @@ attack :-
         asserta(status(roam))
         ; retract(tokemon(Enemy,X,Y,_,Owner)),
         assertz(tokemon(Enemy,X,Y,HPnew,Owner))
+        
     ),
     (HPadd > 0 ->
         sleep(2), decideEnemyBattle, !
     ; !
     ).
     
-specialAttack :- \+(status(battle)), write('waduh sori ga bisa nih gan'), nl, !, fail.
-specialAttack :- \+(battle(_)), write('Pilih Tokemon terlebih dahulu!'), nl, !.
+specialAttack :- \+(status(battle)), write('Sorry! You cannot do that for now.'), nl, !, fail.
+specialAttack :- \+(battle(_)), write('Pick a Tokemon!'), nl, !.
 specialAttack :- encounter(Tokemon), tokemon(Tokemon, _, _, HP, _), HP =:= 0, write('Have some mercy.'), nl, !.
 specialAttack :- battle(TokemonP), special(TokemonP), write('Special attacks can only be used once per battle!'), nl, !, fail.
 specialAttack :-
@@ -446,12 +521,30 @@ specialAttack :-
     asserta(special(TokemonP)),
     (   
         type(TokemonP,fire),type(Enemy,leaves) ->
-            AtkAtribut is Atk + Atk/2
+            AtkAtribut is Lvl * (Atk + Atk/2)
         ; type(TokemonP,leaves),type(Enemy,water) ->
-            AtkAtribut is Atk + Atk/2
+            AtkAtribut is Lvl * (Atk + Atk/2)
         ; type(TokemonP,water),type(Enemy,fire) ->
-            AtkAtribut is Atk + Atk/2
-        ; AtkAtribut is Atk
+            AtkAtribut is Lvl * (Atk + Atk/2)
+        ; type(TokemonP, flying),type(Enemy,leaves) ->
+            AtkAtribut is Lvl * (Atk + Atk/2)
+        ; type(TokemonP, electric),type(Enemy, water) ->
+            AtkAtribut is Lvl * (Atk + Atk/2)
+        ; type(TokemonP, ground),type(Enemy,electric) ->
+            AtkAtribut is Lvl * (Atk + Atk/2)  
+        ; type(TokemonP,leaves),type(Enemy,fire) ->
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP,water),type(Enemy,leaves) ->
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP,fire),type(Enemy,water) ->
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP, leaves),type(Enemy,flying) ->
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP, water),type(Enemy, electric) ->
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP, electric),type(Enemy,ground) ->
+            AtkAtribut is Lvl * (Atk - Atk/2)  
+        ; AtkAtribut is Lvl * Atk
     ),
     tokemon(Enemy,X,Y,HP,Ownership),
     printSpecialAttackMessage(TokemonP, Jurus), nl,
@@ -467,6 +560,14 @@ specialAttack :-
     asserta(tokemon(Enemy, X, Y, HPadd, Ownership)),
     printBattleStatus(TokemonP, Enemy),
     (HPadd =:= 0 ->
+        retract(level(TokemonP, Lvl)),
+        (
+            legendary(Enemy) ->
+            Lvlnew is Lvl + 2
+            ;
+            Lvlnew is Lvl + 1
+        ),
+        asserta(level(TokemonP,Lvlnew)),
         format('~w fainted', [Enemy]),
         nl,
         write('Capture?'),
@@ -477,6 +578,7 @@ specialAttack :-
         ), retract(status(_)), asserta(status(roam)), retract(special(TokemonP))
         ; retract(tokemon(Enemy,X,Y,_,Owner)),
         assertz(tokemon(Enemy,X,Y,HPnew,Owner))
+        
     ),
     (HPadd > 0 ->
         sleep(2), decideEnemyBattle, !
@@ -499,7 +601,34 @@ enemyAttack :-
         ; type(Enemy,water),type(TokemonP,fire) ->
             damage(Enemy,Atk),
             AtkAtribut is Atk + Atk/2
-        ; damage(Enemy,Atk),
+        ; type(Enemy, flying),type(TokemonP,leaves) ->
+            damage(Enemy,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(Enemy, electric),type(TokemonP, water) ->
+            damage(Enemy,Atk),
+            AtkAtribut is Atk + Atk/2
+        ; type(Enemy, ground),type(TokemonP,electric) ->
+            damage(Enemy,Atk),
+            AtkAtribut is Atk + Atk/2  
+        ;type(Enemy,leaves),type(TokemonP,fire) ->
+            damage(Enemy,Atk),
+            AtkAtribut is Atk - Atk/2
+        ; type(Enemy,water),type(TokemonP,leaves) ->
+            damage(Enemy,Atk),
+            AtkAtribut is Atk - Atk/2
+        ; type(Enemy,fire),type(TokemonP,water) ->
+            damage(Enemy,Atk),
+            AtkAtribut is Atk - Atk/2
+        ; type(Enemy, leaves),type(TokemonP,flying) ->
+            damage(Enemy,Atk),
+            AtkAtribut is Atk - Atk/2
+        ; type(Enemy, water),type(TokemonP, electric) ->
+            damage(Enemy,Atk),
+            AtkAtribut is Atk - Atk/2
+        ; type(Enemy, electric),type(TokemonP,ground) ->
+            damage(Enemy,Atk),
+            AtkAtribut is Atk - Atk/2  
+        ;  damage(Enemy,Atk),
         AtkAtribut is Atk
     ),
     tokemon(TokemonP,X,Y,HP,Ownership),
@@ -515,7 +644,7 @@ enemyAttack :-
     asserta(tokemon(TokemonP, X, Y, HPadd, Ownership)),
     printBattleStatus(TokemonP, Enemy),
     (HPadd =:= 0 ->
-        write('Tokemon kamu kalah.'),
+        write('Your Tokemon loses!'),
         nl,
         retract(tokemon(TokemonP,_,_,_,_)),
         retract(inventory(TokemonP)),
@@ -523,7 +652,7 @@ enemyAttack :-
         (
             \+inventory(_) ->
             kalah
-            ;write('Pilih Tokemon lagi'),
+            ;write('Choose another tokemon! '),
         nl,
         printInventory,
             (
@@ -544,13 +673,31 @@ enemySpecialAttack :-
     asserta(special(Enemy)),
     skill(Enemy, Jurus, Atk),
     (
-        type(Enemy,fire),type(TokemonP,leaves) ->
-            AtkAtribut is Atk + Atk/2
-        ; type(Enemy,leaves),type(TokemonP,water) ->
-            AtkAtribut is Atk + Atk/2
-        ; type(Enemy,water),type(TokemonP,fire) ->
-            AtkAtribut is Atk + Atk/2
-        ; AtkAtribut is Atk
+        type(TokemonP,fire),type(Enemy,leaves) ->
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP,leaves),type(Enemy,water) ->
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP,water),type(Enemy,fire) ->
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP, flying),type(Enemy,leaves) ->
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP, electric),type(Enemy, water) ->
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP, ground),type(Enemy,electric) ->
+            AtkAtribut is Lvl * (Atk - Atk/2)  
+        ; type(TokemonP,leaves),type(Enemy,fire) ->
+            AtkAtribut is Lvl * (Atk + Atk/2)
+        ; type(TokemonP,water),type(Enemy,leaves) ->
+            AtkAtribut is Lvl * (Atk + Atk/2)
+        ; type(TokemonP,fire),type(Enemy,water) ->
+            AtkAtribut is Lvl * (Atk + Atk/2)
+        ; type(TokemonP, leaves),type(Enemy,flying) ->
+            AtkAtribut is Lvl * (Atk + Atk/2)
+        ; type(TokemonP, water),type(Enemy, electric) ->
+            AtkAtribut is Lvl * (Atk + Atk/2)
+        ; type(TokemonP, electric),type(Enemy,ground) ->
+            AtkAtribut is Lvl * (Atk + Atk/2)  
+        ; AtkAtribut is Lvl * Atk
     ),
     tokemon(TokemonP,X,Y,HP,Ownership),
     printSpecialAttackMessage(Enemy, Jurus), nl, 
@@ -566,7 +713,7 @@ enemySpecialAttack :-
     asserta(tokemon(TokemonP, X, Y, HPadd, Ownership)),
     printBattleStatus(TokemonP, Enemy),
     (HPadd =:= 0 ->
-            write('Tokemon kita kalah.'),
+            write('Your Tokemon loses! '),
             nl,
             
             retract(tokemon(TokemonP,_,_,_,_)),
@@ -575,7 +722,7 @@ enemySpecialAttack :-
             (
             \+inventory(_) ->
             kalah
-            ; write('Pilih Tokemon lagi'),
+            ; write('Choose another tokemon! '),
             nl,
             printInventory,
                 (
@@ -601,7 +748,23 @@ decideEnemyBattle :-
 % LOSING CONDITION
 kalah :-
     reset,
-    write('Wah kamu kalah, cupu sih, ayo coba lagi!'),nl,
-    write('Tulis Start untuk memulai game kembali!!'), nl, !.
-    
+    write('You lose! Get gud!!!'),nl,
+    write('Type start to play again!'), nl, !.
+
+% WINNING CONDITION
+menang :- 
+    reset,
+    write('JENG JENG JENG JENG '),nl,
+    sleep(1),
+    write('  __ __   ___   __ __      __    __  ____  ____       ______  __ __    ___       ____   ____  ___ ___    ___      __   '),nl,
+    write(' |  |  | /   \\ |  |  |    |  |__|  ||    ||    \\     |      ||  |  |  /  _]     /    | /    ||   |   |  /  _]    |  | '),nl,
+    write(' |  |  ||     ||  |  |    |  |  |  | |  | |  _  |    |      ||  |  | /  [_     |   __||  o  || _   _ | /  [_     |  | '),nl,
+    write(' |  ~  ||  O  ||  |  |    |  |  |  | |  | |  |  |    |_|  |_||  _  ||    _]    |  |  ||     ||  \\_/  ||    _]    |__| '),nl,
+    write(' |___, ||     ||  :  |    |  `     | |  | |  |  |      |  |  |  |  ||   [_     |  |_ ||  _  ||   |   ||   [_      __  '),nl,
+    write(' |     ||     ||     |     \\      /  |  | |  |  |      |  |  |  |  ||     |    |     ||  |  ||   |   ||     |    |  | '),nl,
+    write(' |____/  \\___/  \\__,_|      \\_/\\_/  |____||__|__|      |__|  |__|__||_____|    |___,_||__|__||___|___||_____|    |__| '),nl,
+                                                                                                                    
+
+    write('Congratulations !! Write start if you want to play again!! '),!.
+
 
