@@ -568,7 +568,7 @@ ignore :- /* ignore == mati */
     ),!.
 
 % PLAYER
-attack :- \+status(battle), write('Sorry! You cannot do that for now. '),!, fail.
+attack :- \+status(battle), write('Sorry! You cannot do that for now. '), nl,!, fail.
 attack :- \+(battle(_)), write('Pick a Tokemon!'), !.
 attack :- encounter(Tokemon), tokemon(Tokemon, _, _, HP, _), HP =:= 0, write('Have some mercy.'), nl, !.
 attack :-
