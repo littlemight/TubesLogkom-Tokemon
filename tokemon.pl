@@ -706,7 +706,7 @@ attack :-
     ; !
     ).
     
-specialAttack :- \+(status(battle)), write('Sorry! You cannot do that for now.'), nl, !, fail.
+specialAttack :- \+(status(battle)), write('Sorry! You cannot do that for now.'), nl, !.
 specialAttack :- \+(battle(_)), write('Pick a Tokemon!'), nl, !.
 specialAttack :- encounter(Tokemon), tokemon(Tokemon, _, _, HP, _), HP =:= 0, write('Have some mercy.'), nl, !.
 specialAttack :- battle(TokemonP), special(TokemonP), write('Special attacks can only be used once per battle!'), nl, !.
@@ -729,6 +729,18 @@ specialAttack :-
             AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, ground),type(Enemy,electric) ->
             AtkAtribut is Mult * (Atk + Atk/2)  
+        ; type(TokemonP, fire),type(Enemy, flying) ->
+            AtkAtribut is Mult * (Atk + Atk/2)
+        ; type(TokemonP, flying),type(Enemy, leaves) ->
+            AtkAtribut is Mult * (Atk + Atk/2)
+        ; type(TokemonP, leaves),type(Enemy, electric) ->
+            AtkAtribut is Mult * (Atk + Atk/2)
+        ; type(TokemonP, electric),type(Enemy, water) ->
+            AtkAtribut is Mult * (Atk + Atk/2)
+        ; type(TokemonP, water),type(Enemy, ground) ->
+            AtkAtribut is Mult * (Atk + Atk/2)
+        ; type(TokemonP, ground),type(Enemy, fire) ->
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP,leaves),type(Enemy,fire) ->
             AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP,water),type(Enemy,leaves) ->
@@ -741,6 +753,18 @@ specialAttack :-
             AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, electric),type(Enemy,ground) ->
             AtkAtribut is Mult * (Atk - Atk/2)  
+        ; type(TokemonP, flying),type(Enemy, fire) ->
+            AtkAtribut is Mult * (Atk - Atk/2)
+        ; type(TokemonP, leaves),type(Enemy, flying) ->
+            AtkAtribut is Mult * (Atk - Atk/2)
+        ; type(TokemonP, electric),type(Enemy, leaves) ->
+            AtkAtribut is Mult * (Atk - Atk/2)
+        ; type(TokemonP, water),type(Enemy, electric) ->
+            AtkAtribut is Mult * (Atk - Atk/2)
+        ; type(TokemonP, ground),type(Enemy, water) ->
+            AtkAtribut is Mult * (Atk - Atk/2)
+        ; type(TokemonP, fire),type(Enemy, ground) ->
+            AtkAtribut is Mult * (Atk - Atk/2)    
         ; AtkAtribut is Mult * Atk
     ),
     tokemon(Enemy,X,Y,HP,Ownership),
@@ -884,30 +908,30 @@ enemySpecialAttack :-
     skill(Enemy, Jurus, Atk),
     (
         type(TokemonP,fire),type(Enemy,leaves) ->
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Atk - Atk/2
         ; type(TokemonP,leaves),type(Enemy,water) ->
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Atk - Atk/2
         ; type(TokemonP,water),type(Enemy,fire) ->
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Atk - Atk/2
         ; type(TokemonP, flying),type(Enemy,leaves) ->
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Atk - Atk/2
         ; type(TokemonP, electric),type(Enemy, water) ->
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Atk - Atk/2
         ; type(TokemonP, ground),type(Enemy,electric) ->
-            AtkAtribut is Lvl * (Atk - Atk/2)  
+            AtkAtribut is (Atk - Atk/2)  
         ; type(TokemonP,leaves),type(Enemy,fire) ->
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is (Atk + Atk/2)
         ; type(TokemonP,water),type(Enemy,leaves) ->
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is (Atk + Atk/2)
         ; type(TokemonP,fire),type(Enemy,water) ->
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is (Atk + Atk/2)
         ; type(TokemonP, leaves),type(Enemy,flying) ->
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is (Atk + Atk/2)
         ; type(TokemonP, water),type(Enemy, electric) ->
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is (Atk + Atk/2)
         ; type(TokemonP, electric),type(Enemy,ground) ->
-            AtkAtribut is Lvl * (Atk + Atk/2)  
-        ; AtkAtribut is Lvl * Atk
+            AtkAtribut is (Atk + Atk/2)  
+        ; AtkAtribut is Atk
     ),
     tokemon(TokemonP,X,Y,HP,Ownership),
     printSpecialAttackMessage(Enemy, Jurus), nl, 
