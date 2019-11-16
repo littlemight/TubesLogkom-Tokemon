@@ -38,9 +38,9 @@ evolveto(arip, pira).
 evolveto(laron, tawon).
 
 starter(jones).
-starter(mitel).
-starter(yoga).
-starter(arip).
+%starter(mitel).
+%starter(yoga).
+%starter(arip).
 
 level(bangkumon,1.0).
 level(mejamon,1.0).
@@ -159,12 +159,24 @@ evolve(Tokemon) :-
     format('~w has evolved to ~w !', [Tokemon, Evolved]),
     nl.
 
+resetLvl :-
+    findall(Tokemon, normalNotSpawned(Tokemon), ListTokemon),
+    resetLvlList(ListTokemon).
+resetLvlList([]) :- !.
+resetLvlList([H | T]) :-
+    asserta(level(H, 1.0)),
+    resetLvlList(T).
+
 initNormal(0) :- !.
 initNormal(N) :-
     height(H),
     width(W),
-    random(1, W, X),
-    random(1, H, Y),
+    repeat,
+        random(1, H, Y), random(1, W, X),
+        (fence(X, Y) -> fail
+        ; gym(X, Y) -> fail
+        ; !
+        ),
     findall(Tokemon, normalNotSpawned(Tokemon), ListTokemon),
     length(ListTokemon, LenListTokemon),
     random(0, LenListTokemon, Pick),
@@ -339,7 +351,7 @@ status :-
     findall(LegendaryEnemy, legendaryRoaming(LegendaryEnemy), ListEnemy),
     write('Legendary Tokemons Left:'),
     nl,
-    printStatus(ListEnemy)
+    printStatus(ListEnemy), !
     .
     
 printStatus([]) :- !.
@@ -354,6 +366,8 @@ printStatus([Tokemon|Tail]) :-
         FLvl is floor(Exp),
         write('Level : '),
         write(FLvl),
+        Persen is floor((Exp - floor(Exp))*100),
+        write('('), write(Persen), write('% to the next level)'),
         nl
     ; !
     ),
@@ -501,16 +515,17 @@ attack :-
     asserta(tokemon(Enemy, X, Y, HPadd, Ownership)),
     printBattleStatus(TokemonP, Enemy),
     (HPadd =:= 0 ->
-        retract(level(TokemonP, Lvl)),
-        expGain(TokemonP, Enemy, Exp),
-        asserta(level(TokemonP, Exp)),
+        level(TokemonP, BefExp),
+        expGain(TokemonP, Enemy, ExpGain),
+        retract(level(Tokemon, BefExp)),
+        NewExp is BefExp + ExpGain,
+        asserta(level(TokemonP, NewExp)),
         format('~w fainted.', [Enemy]),
         nl,
-        (
-            floor(Exp) >= 4 ->
+        (floor(NewExp) >= 4 ->
             evolveto(TokemonP,Evolved),
-            retract(level(TokemonP,Exp)),
-            asserta(level(Evolved,Exp)),
+            retract(level(TokemonP,NewExp)),
+            asserta(level(Evolved,NewExp)),
             retract(inventory(TokemonP)),
             retract(tokemon(TokemonP,XPos,YPos,HP,Owner)),
             asserta(inventory(Evolved)),
@@ -519,7 +534,7 @@ attack :-
             asserta(tokemon(Evolved,XPos,YPos,HPnew,Owner)),
             format('~w has evolved to ~w !', [TokemonP, Evolved]),
             nl
-            ; !
+        ; !
         ),
         write('Capture?'),
         nl,
@@ -552,7 +567,7 @@ specialAttack :-
     encounter(Enemy),
     skill(TokemonP, Jurus, Atk),
     asserta(special(TokemonP)),
-    level(TokemonP, Lvl),
+    multiplier(TokemonP, Mult),
     (   
         type(TokemonP,fire),type(Enemy,leaves) ->
             AtkAtribut is Mult * (Atk + Atk/2)
@@ -593,11 +608,12 @@ specialAttack :-
     ),
     asserta(tokemon(Enemy, X, Y, HPadd, Ownership)),
     printBattleStatus(TokemonP, Enemy),
-    (
-        HPadd =:= 0 ->
-        retract(level(TokemonP, Lvl)),
-        expGain(TokemonP, Enemy, Exp),
-        asserta(level(TokemonP, Exp)),
+    (HPadd =:= 0 ->
+        level(TokemonP, BefExp),
+        expGain(TokemonP, Enemy, ExpGain),
+        retract(level(Tokemon, BefExp)),
+        NewExp is BefExp + ExpGain,
+        asserta(level(TokemonP, NewExp)),
         format('~w fainted', [Enemy]),
         nl,
         (

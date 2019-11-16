@@ -10,8 +10,8 @@ hesoyam :- visible, retract(visible), write('Now you\'re just a peasant Tokemon 
 
 initMap :- 
   /* Get Map Size */
-  random(10, 31, H),
-  random(10, 31, W),
+  random(10, 21, H),
+  random(10, 21, W),
   asserta(height(H)),
   asserta(width(W)),
 
