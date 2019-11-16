@@ -140,23 +140,6 @@ multiplier(Tokemon, Multiplier) :-
     FLvl is floor(Lvl),
     Multiplier is (1.2)**(FLvl - 1).
 
-evolve(Tokemon) :- \+evolveto(_), write('waduh sorry gabisa gan !'), nl, !.
-evolve(Tokemon) :- level(Tokemon, X), X<4 , write('waduh sorry gabisa gan!'), nl, !.
-evolve(Tokemon) :- 
-    retract(level(Tokemon, X)),
-    X >= 4,
-    evolveto(Tokemon,Evolved),
-    asserta(level(Evolved,X)),
-    retract(inventory(Tokemon)),
-    retract(tokemon(Tokemon,XPos,YPos,HP,Owner)),
-    asserta(inventory(Evolved)),
-    HPnew is 2 * HP,
-    asserta(tokemon(Evolved,XPos,YPos,HPnew,Owner)),
-    format('~w has evolved to ~w !', [Tokemon, Evolved]),
-    nl.
-
-
-
 initNormal(0) :- !.
 initNormal(N) :-
     height(H),
@@ -497,6 +480,21 @@ attack :-
         asserta(level(TokemonP, Exp)),
         format('~w fainted.', [Enemy]),
         nl,
+        (
+            floor(Exp) >= 4 ->
+            evolveto(TokemonP,Evolved),
+            retract(level(TokemonP,Exp)),
+            asserta(level(Evolved,Exp)),
+            retract(inventory(TokemonP)),
+            retract(tokemon(TokemonP,XPos,YPos,HP,Owner)),
+            asserta(inventory(Evolved)),
+            multiplier(TokemonP, Mult),
+            HPnew is Mult * HP,
+            asserta(tokemon(Evolved,XPos,YPos,HPnew,Owner)),
+            format('~w has evolved to ~w !', [TokemonP, Evolved]),
+            nl
+            ; !
+        ),
         write('Capture?'),
         nl,
         (
@@ -576,6 +574,21 @@ specialAttack :-
         asserta(level(TokemonP, Exp)),
         format('~w fainted', [Enemy]),
         nl,
+        (
+            floor(Exp) >= 4 ->
+            evolveto(TokemonP,Evolved),
+            retract(level(TokemonP,Exp)),
+            asserta(level(Evolved,Exp)),
+            retract(inventory(TokemonP)),
+            retract(tokemon(TokemonP,XPos,YPos,HP,Owner)),
+            asserta(inventory(Evolved)),
+            multiplier(TokemonP, Mult),
+            HPnew is Mult * HP,
+            asserta(tokemon(Evolved,XPos,YPos,HPnew,Owner)),
+            format('~w has evolved to ~w !', [TokemonP, Evolved]),
+            nl
+            ; !
+        ),
         write('Capture?'),
         nl,
         (
