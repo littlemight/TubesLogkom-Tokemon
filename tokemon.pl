@@ -73,36 +73,36 @@ starter(jones).
 %starter(arip).
 
 /* level basic tokemon */
-level(mamon,1).             
-level(tokekmon,1).          
-level(zhafransyah,1).       
-level(vegan,1).             
-level(fabian,1).            
-level(jones,1).             
-level(mitel,1).             
-level(yogay,1).             
-level(arip,1).              
-level(laron,1).             
-level(azong,1).             
-level(tudecu,1).            
-level(pilbet,1).            
-level(jopan,1).         
+level(mamon, 1.0).             
+level(tokekmon, 1.0).          
+level(zhafransyah, 1.0).       
+level(vegan, 1.0).             
+level(fabian, 1.0).            
+level(jones, 1.0).             
+level(mitel, 1.0).             
+level(yogay, 1.0).             
+level(arip, 1.0).              
+level(laron, 1.0).             
+level(azong, 1.0).             
+level(tudecu, 1.0).            
+level(pilbet, 1.0).            
+level(jopan, 1.0).         
 
 /* level evolved tokemon */
-level(kumon, 4).
-level(tokaimon, 4).
-level(sultan, 4).
-level(cogan, 4).
-level(fabiun, 4).
-level(jones2, 4).
-level(miteru, 4).
-level(magay, 4).
-level(pari, 4).
-level(mawut, 4).
-level(azab, 4).
-level(paranicu, 4).
-level(pilbat, 4).
-level(jepun, 4).
+level(kumon, 4.0).
+level(tokaimon, 4.0).
+level(sultan, 4.0).
+level(cogan, 4.0).
+level(fabiun, 4.0).
+level(jones2, 4.0).
+level(miteru, 4.0).
+level(magay, 4.0).
+level(pari, 4.0).
+level(mawut, 4.0).
+level(azab, 4.0).
+level(paranicu, 4.0).
+level(pilbat, 4.0).
+level(jepun, 4.0).
     
 /* maxHealth basic tokemon */
 maxHealth(mamon, 200).          
