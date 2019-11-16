@@ -73,22 +73,6 @@ starter(jones).
 %starter(arip).
 
 /* level basic tokemon */
-<<<<<<< HEAD
-level(mamon,1.0).             
-level(tokekmon,1.0).          
-level(zhafransyah,1.0).       
-level(vegan,1.0).             
-level(fabian,1.0).            
-level(jones,1.0).             
-level(mitel,1.0).             
-level(yogay,1.0).             
-level(arip,1.0).              
-level(laron,1.0).             
-level(azong,1.0).             
-level(tudecu,1.0).            
-level(pilbet,1.0).            
-level(jopan,1.0).         
-=======
 level(mamon, 1.0).             
 level(tokekmon, 1.0).          
 level(zhafransyah, 1.0).       
@@ -103,7 +87,6 @@ level(azong, 1.0).
 level(tudecu, 1.0).            
 level(pilbet, 1.0).            
 level(jopan, 1.0).         
->>>>>>> 5043fb3d85b765ccb11d2d041f0e9d557574ad62
 
 /* level evolved tokemon */
 level(kumon, 4.0).
