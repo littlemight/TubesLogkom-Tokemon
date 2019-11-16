@@ -40,7 +40,7 @@ w :-
     ;asserta(posPlayer(X, Y)), writeNabrak
   ), !.
 
-a :- \+status(roam),  write('Sorry! You cannot do that for now. '),!, fail.
+a :- \+status(roam),  write('Sorry! You cannot do that for now. '),nl,!, fail.
 a :-
   retract(posPlayer(X, Y)),
   XNew is X - 1,
@@ -52,7 +52,7 @@ a :-
   ),
   !.
 
-s :- \+status(roam), write('Sorry! You cannot do that for now. '),!, fail.
+s :- \+status(roam), write('Sorry! You cannot do that for now. '),nl,!, fail.
 s :-
   retract(posPlayer(X, Y)),
   height(YMax),
@@ -65,7 +65,7 @@ s :-
   ),
   !.
 
-d :- \+status(roam), write('Sorry! You cannot do that for now. '),!, fail.
+d :- \+status(roam), write('Sorry! You cannot do that for now. '),nl,!, fail.
 d :-
   retract(posPlayer(X, Y)),
   width(XMax),
