@@ -60,6 +60,7 @@ level(jopan,1).
 % tokemon evolve jadi apa
 evolveto(bangkumon, evolveBangkumon).
     
+% base health untuk level 1
 maxHealth(bangkumon, 200). maxHealth(evolveBangkumon, 500).
 maxHealth(mejamon, 500).
 maxHealth(zhafransyah, 500).
@@ -133,6 +134,11 @@ expGain(Tokemon, Enemy, ExpGained) :-
     ;   Mult is 1
     ),
     ExpGained is Mult*(1/(1 + 0.5* (Lvl - 1))).
+
+multiplier(Tokemon, Multiplier) :-
+    level(Tokemon, Lvl),
+    FLvl is floor(Lvl),
+    Multiplier is (1.2)**(FLvl - 1).
 
 evolve(Tokemon) :- \+evolveto(_), write('waduh sorry gabisa gan !'), nl, !.
 evolve(Tokemon) :- level(Tokemon, X), X<4 , write('waduh sorry gabisa gan!'), nl, !.
@@ -527,6 +533,7 @@ specialAttack :-
     encounter(Enemy),
     skill(TokemonP, Jurus, Atk),
     asserta(special(TokemonP)),
+    level(TokemonP, Lvl),
     (   
         type(TokemonP,fire),type(Enemy,leaves) ->
             AtkAtribut is Lvl * (Atk + Atk/2)
