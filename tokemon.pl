@@ -18,107 +18,100 @@
 :- dynamic(level/2). /* level(Tokemon, lvl), Level dari tokemon */
 
 /* DATABASE KENTANG */
-legendary(bangkumon).
-legendary(mejamon).
-legendary(zhafransyah).
-legendary(vegan).
-normal(fabian).
-normal(jones).
-normal(mitel).
-normal(yoga).
-normal(arip).
-normal(laron).
-normal(azong).
-normal(tudecu).
-normal(pilbet).
-normal(jopan).
-
-evolveto(jones, napoleon).
-evolveto(arip, pira).
-evolveto(laron, tawon).
+legendary(mamon).           legendary(kumon).           evolveto(mamon, kumon).
+legendary(tokek).           legendary(tokai).           evolveto(tokek, tokai).
+legendary(zhafransyah).     legendary(sultan).          evolveto(zhafransyah, sultan).
+legendary(vegan).           legendary(cogan).           evolveto(vegan, cogan).
+normal(fabian).             normal(fabiun).             evolveto(fabian, fabiun).
+normal(jones).              normal(jones2).             evolveto(jones, jones2).
+normal(mitel).              normal(miteru).             evolveto(mitel, miteru).
+normal(yogay).              normal(magay).              evolveto(yogay, magay).
+normal(arip).               normal(pari).               evolveto(arip, pari).
+normal(laron).              normal(mawut).              evolveto(laron, mawut).
+normal(azong).              normal(azab).               evolveto(azong, azab).
+normal(tudecu).             normal(paranicu).           evolveto(tudecu, paranicu).
+normal(pilbet).             normal(pilbat).             evolveto(pilbet, pilbat).
+normal(jopan).              normal(jepun).              evolveto(jopan, jepun).
 
 starter(jones).
 starter(mitel).
-starter(yoga).
+starter(yogay).
 starter(arip).
 
-level(bangkumon,1).
-level(mejamon,1).
-level(zhafransyah,1).
-level(vegan,1).
-level(fabian,1).
-level(jones,1).
-level(mitel,1).
-level(yoga,1).
-level(arip,1).
-level(laron,1).
-level(azong,1).
-level(tudecu,1).
-level(pilbet,1).
-level(jopan,1).
-
-% tokemon evolve jadi apa
-evolveto(bangkumon, evolveBangkumon).
+level(mamon,1).             level(kumon, 4).
+level(tokek,1).             level(tokai, 4).
+level(zhafransyah,1).       level(sultan, 4).
+level(vegan,1).             level(cogan, 4).
+level(fabian,1).            level(fabiun, 4).
+level(jones,1).             level(jones2, 4).
+level(mitel,1).             level(miteru, 4).
+level(yogay,1).             level(magay, 4).
+level(arip,1).              level(pari, 4).
+level(laron,1).             level(mawut, 4).
+level(azong,1).             level(azab, 4).
+level(tudecu,1).            level(paranicu, 4).
+level(pilbet,1).            level(pilbat, 4).
+level(jopan,1).             level(jepun, 4).
     
-maxHealth(bangkumon, 200). maxHealth(evolveBangkumon, 500).
-maxHealth(mejamon, 500).
-maxHealth(zhafransyah, 500).
-maxHealth(vegan, 9).
-maxHealth(fabian, 150).
-maxHealth(jones, 750).
-maxHealth(mitel, 120).
-maxHealth(yoga, 150).
-maxHealth(arip, 100).
-maxHealth(laron, 1).
-maxHealth(azong, 80).
-maxHealth(tudecu, 50).
-maxHealth(pilbet, 90).
-maxHealth(jopan, 130).
+maxHealth(mamon, 200).          maxHealth(kumon, 400).
+maxHealth(tokek, 200).          maxHealth(tokai, 400).
+maxHealth(zhafransyah, 300).    maxHealth(sultan, 600).
+maxHealth(vegan, 10).           maxHealth(cogan, 50).
+maxHealth(fabian, 150).         maxHealth(fabiun, 300).
+maxHealth(jones, 150).          maxHealth(jones2, 300).
+maxHealth(mitel, 100).          maxHealth(miteru, 200).
+maxHealth(yogay, 250).          maxHealth(magay, 500).
+maxHealth(arip, 120).           maxHealth(pari, 240).
+maxHealth(laron, 10).           maxHealth(mawut, 20).
+maxHealth(azong, 130).          maxHealth(azab, 300).
+maxHealth(tudecu, 90).          maxHealth(paranicu, 200).
+maxHealth(pilbet, 110).         maxHealth(pilbat, 250).
+maxHealth(jopan, 140).          maxHealth(jepun, 300)
 
-type(bangkumon, fire).
-type(mejamon, water).
-type(zhafransyah, electric).
-type(vegan, ground).
-type(fabian, water).
-type(jones, flying).
-type(mitel, fire).
-type(yoga, leaves).
-type(arip, flying).
-type(laron, ground).
-type(azong, water).
-type(tudecu, electric).
-type(pilbet, fire).
-type(jopan, flying).
+type(mamon, fire).              type(kumon, fire).
+type(tokek, water).             type(tokai, water).
+type(zhafransyah, electric).    type(sultan, electric).
+type(vegan, ground).            type(cogan, ground).
+type(fabian, water).            type(fabiun, water).
+type(jones, ground).            type(jones2, ground).
+type(mitel, fire).              type(miteru, fire).
+type(yogay, leaves).            type(magay, leaves),
+type(arip, flying).             type(pari, flying).
+type(laron, ground).            type(mawut, ground).
+type(azong, water).             type(azab, water).
+type(tudecu, electric).         type(paranicu, electric).
+type(pilbet, fire).             type(pilbat, water).
+type(jopan, leaves).            type(jepun, leaves).
 
-damage(bangkumon, 35).
-damage(mejamon, 10).
-damage(zhafransyah, 50).
-damage(vegan, 10).
-damage(fabian, 15).
-damage(jones, 2000).
-damage(mitel, 10).
-damage(yoga, 25).
-damage(arip, 30).
-damage(laron, 1).
-damage(azong, 20).
-damage(tudecu, 50).
-damage(pilbet, 15).
-damage(jopan, 15).
+damage(mamon, 30).              damage(kumon, 60).
+damage(tokek, 25).              damage(tokai, 50).
+damage(zhafransyah, 30).        damage(sultan, 60).
+damage(vegan, 50).              damage(cogan, 100).
+damage(fabian, 30).             damage(fabiun, 60).
+damage(jones, 40).              damage(jones2, 80).
+damage(mitel, 20).              damage(miteru, 40).
+damage(yogay, 25).              damage(magay, 50).
+damage(arip, 30).               damage(pari, 60).
+damage(laron, 1).               damage(mawut, 5).
+damage(azong, 35).              damage(azab, 70).
+damage(tudecu, 30).             damage(paranicu, 60).
+damage(pilbet, 30).             damage(pilbat, 60).
+damage(jopan, 50).              damage(jepun, 100).
 
-skill(bangkumon, patah, 100).
-skill(mejamon, kebalik, 15).
-skill(zhafransyah, ruqyah, 150).
-skill(vegan, capcay, 1000).
-skill(fabian, berdoa, 50).
-skill(jones, breakdance, 3500).
-skill(mitel, danusan, 75).
-skill(yoga, muntah, 50).
-skill(arip, par, 35).
-skill(laron, sampah, 2).
-skill(azong, renang, 25).
-skill(tudecu, nyasar, 60).
-skill(pilbet, flamethrower, 20).
-skill(jopan, kentut, 55).
+skill(mamon, sesajen, 60).          skill(kumon, aljabar, 150).
+skill(tokek, mengerang, 60).        skill(tokai, menjerit, 150).
+skill(zhafransyah, ruqyah, 75).     skill(sultan, santet, 150).
+skill(vegan, jamur, 150).            skill(cogan, capcay, 300).
+skill(fabian, berdoa, 70).          skill(fabiun, sembahyang, 140).
+skill(jones, breakdance, 100).       skill(jones2, menggeliat, 200).
+skill(mitel, danusan, 50).          skill(miteru, ntakntul, 100).
+skill(yogay, muntah, 40).           skill(magay, ngambang, 100).
+skill(arip, par, 60).               skill(pari, rap, 120).
+skill(laron, nyampah, 10).          skill(mawut, mati, 20).
+skill(azong, renang, 30).           skill(azab, polo, 70).
+skill(tudecu, nyasar, 60).          skill(paranicu, panik, 120).
+skill(pilbet, flamethrower, 50).    skill(pilbat, waterthrower, 100).
+skill(jopan, sembelit, 20).         skill(jepun, kentut, 70).
 /* END OF DATABASE KENTANG */
 
 /* TOKEMON SPAWNS */
@@ -140,8 +133,6 @@ evolve(Tokemon) :-
     asserta(tokemon(Evolved,XPos,YPos,HPnew,Owner)),
     format('~w has evolved to ~w !', [Tokemon, Evolved]),
     nl.
-
-
 
 initNormal(0) :- !.
 initNormal(N) :-
@@ -427,41 +418,77 @@ attack :-
     encounter(Enemy),
     level(TokemonP, Lvl),
     (
-        type(TokemonP,fire),type(Enemy,leaves) ->
-            damage(TokemonP,Atk),
+        type(TokemonP, fire),type(Enemy, leaves) ->
+            damage(TokemonP, Atk),
             AtkAtribut is Lvl * (Atk + Atk/2)
-        ; type(TokemonP,leaves),type(Enemy,water) ->
-            damage(TokemonP,Atk),
+        ; type(TokemonP, leaves),type(Enemy, water) ->
+            damage(TokemonP, Atk),
             AtkAtribut is Lvl * (Atk + Atk/2)
-        ; type(TokemonP,water),type(Enemy,fire) ->
-            damage(TokemonP,Atk),
+        ; type(TokemonP, water),type(Enemy, fire) ->
+            damage(TokemonP, Atk),
             AtkAtribut is Lvl * (Atk + Atk/2)
-        ; type(TokemonP, flying),type(Enemy,leaves) ->
-            damage(TokemonP,Atk),
+        ; type(TokemonP, flying),type(Enemy, ground) ->
+            damage(TokemonP, Atk),
+            AtkAtribut is Lvl * (Atk + Atk/2)
+        ; type(TokemonP, ground),type(Enemy, electric) ->
+            damage(TokemonP, Atk),
+            AtkAtribut is Lvl * (Atk + Atk/2)
+        ; type(TokemonP, electric),type(Enemy, flying) ->
+            damage(TokemonP, Atk),
+            AtkAtribut is Lvl * (Atk + Atk/2)
+        ; type(TokemonP, fire),type(Enemy, flying) ->
+            damage(TokemonP, Atk),
+            AtkAtribut is Lvl * (Atk + Atk/2)
+        ; type(TokemonP, flying),type(Enemy, leaves) ->
+            damage(TokemonP, Atk),
+            AtkAtribut is Lvl * (Atk + Atk/2)
+        ; type(TokemonP, leaves),type(Enemy, electric) ->
+            damage(TokemonP, Atk),
             AtkAtribut is Lvl * (Atk + Atk/2)
         ; type(TokemonP, electric),type(Enemy, water) ->
-            damage(TokemonP,Atk),
+            damage(TokemonP, Atk),
             AtkAtribut is Lvl * (Atk + Atk/2)
-        ; type(TokemonP, ground),type(Enemy,electric) ->
-            damage(TokemonP,Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)    
-        ; type(TokemonP,leaves),type(Enemy,fire) ->
-            damage(TokemonP,Atk),
+        ; type(TokemonP, water),type(Enemy, ground) ->
+            damage(TokemonP, Atk),
+            AtkAtribut is Lvl * (Atk + Atk/2)
+        ; type(TokemonP, ground),type(Enemy, fire) ->
+            damage(TokemonP, Atk),
+            AtkAtribut is Lvl * (Atk + Atk/2)
+        ; type(TokemonP, leaves),type(Enemy, fire) ->
+            damage(TokemonP, Atk),
             AtkAtribut is Lvl * (Atk - Atk/2)
-        ; type(TokemonP,water),type(Enemy,leaves) ->
-            damage(TokemonP,Atk),
+        ; type(TokemonP, water),type(Enemy, leaves) ->
+            damage(TokemonP, Atk),
             AtkAtribut is Lvl * (Atk - Atk/2)
-        ; type(TokemonP,fire),type(Enemy,water) ->
-            damage(TokemonP,Atk),
+        ; type(TokemonP, fire),type(Enemy, water) ->
+            damage(TokemonP, Atk),
             AtkAtribut is Lvl * (Atk - Atk/2)
-        ; type(TokemonP, leaves),type(Enemy,flying) ->
-            damage(TokemonP,Atk),
+        ; type(TokemonP, ground),type(Enemy, flying) ->
+            damage(TokemonP, Atk),
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP, electric),type(Enemy, ground) ->
+            damage(TokemonP, Atk),
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP, flying),type(Enemy, electric) ->
+            damage(TokemonP, Atk),
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP, flying),type(Enemy, fire) ->
+            damage(TokemonP, Atk),
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP, leaves),type(Enemy, flying) ->
+            damage(TokemonP, Atk),
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP, electric),type(Enemy, leaves) ->
+            damage(TokemonP, Atk),
             AtkAtribut is Lvl * (Atk - Atk/2)
         ; type(TokemonP, water),type(Enemy, electric) ->
-            damage(TokemonP,Atk),
+            damage(TokemonP, Atk),
             AtkAtribut is Lvl * (Atk - Atk/2)
-        ; type(TokemonP, electric),type(Enemy,ground) ->
-            damage(TokemonP,Atk),
+        ; type(TokemonP, ground),type(Enemy, water) ->
+            damage(TokemonP, Atk),
+            AtkAtribut is Lvl * (Atk - Atk/2)
+        ; type(TokemonP, fire),type(Enemy, ground) ->
+            damage(TokemonP, Atk),
             AtkAtribut is Lvl * (Atk - Atk/2)    
         ; damage(TokemonP,Atk),
         AtkAtribut is Lvl * Atk
