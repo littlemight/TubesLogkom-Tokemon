@@ -8,7 +8,7 @@ saveGame(FileName) :-
             writeMap,nl,
             writeInventory,
         told, !. 
-        
+
 writeMap:-
  forall(height(X),(write('height('), write(X),write(').'),nl)),
  forall(width(X),(write('width('),write(X),write(').'),nl)),
@@ -25,6 +25,7 @@ loadGame(FileName):-
  write('File not found :) .'), nl, !.
     
 loadGame(FileName):-
+ reset,
  open(FileName, read, Stream),
         readFileLines(Stream,Lines),
     close(Stream), assertaLine(Lines), asserta(init(1)), !.
