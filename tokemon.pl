@@ -705,10 +705,10 @@ attack :-
     ; !
     ).
     
-specialAttack :- \+(status(battle)), write('Sorry! You cannot do that for now.'), nl, !, fail.
+specialAttack :- \+(status(battle)), write('Sorry! You cannot do that for now.'), nl, !.
 specialAttack :- \+(battle(_)), write('Pick a Tokemon!'), nl, !.
 specialAttack :- encounter(Tokemon), tokemon(Tokemon, _, _, HP, _), HP =:= 0, write('Have some mercy.'), nl, !.
-specialAttack :- battle(TokemonP), special(TokemonP), write('Special attacks can only be used once per battle!'), nl, !, fail.
+specialAttack :- battle(TokemonP), special(TokemonP), write('Special attacks can only be used once per battle!'), nl, !.
 specialAttack :-
     battle(TokemonP),
     encounter(Enemy),
@@ -728,6 +728,18 @@ specialAttack :-
             AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, ground),type(Enemy,electric) ->
             AtkAtribut is Mult * (Atk + Atk/2)  
+        ; type(TokemonP, fire),type(Enemy, flying) ->
+            AtkAtribut is Mult * (Atk + Atk/2)
+        ; type(TokemonP, flying),type(Enemy, leaves) ->
+            AtkAtribut is Mult * (Atk + Atk/2)
+        ; type(TokemonP, leaves),type(Enemy, electric) ->
+            AtkAtribut is Mult * (Atk + Atk/2)
+        ; type(TokemonP, electric),type(Enemy, water) ->
+            AtkAtribut is Mult * (Atk + Atk/2)
+        ; type(TokemonP, water),type(Enemy, ground) ->
+            AtkAtribut is Mult * (Atk + Atk/2)
+        ; type(TokemonP, ground),type(Enemy, fire) ->
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP,leaves),type(Enemy,fire) ->
             AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP,water),type(Enemy,leaves) ->
@@ -740,6 +752,18 @@ specialAttack :-
             AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, electric),type(Enemy,ground) ->
             AtkAtribut is Mult * (Atk - Atk/2)  
+        ; type(TokemonP, flying),type(Enemy, fire) ->
+            AtkAtribut is Mult * (Atk - Atk/2)
+        ; type(TokemonP, leaves),type(Enemy, flying) ->
+            AtkAtribut is Mult * (Atk - Atk/2)
+        ; type(TokemonP, electric),type(Enemy, leaves) ->
+            AtkAtribut is Mult * (Atk - Atk/2)
+        ; type(TokemonP, water),type(Enemy, electric) ->
+            AtkAtribut is Mult * (Atk - Atk/2)
+        ; type(TokemonP, ground),type(Enemy, water) ->
+            AtkAtribut is Mult * (Atk - Atk/2)
+        ; type(TokemonP, fire),type(Enemy, ground) ->
+            AtkAtribut is Mult * (Atk - Atk/2)    
         ; AtkAtribut is Mult * Atk
     ),
     tokemon(Enemy,X,Y,HP,Ownership),
@@ -764,7 +788,7 @@ specialAttack :-
         format('~w fainted', [Enemy]),
         nl,
         (
-            floor(Exp) >= 4 ->
+            floor(NewExp) >= 4 ->
             evolveto(TokemonP,Evolved),
             retract(level(TokemonP,Exp)),
             asserta(level(Evolved,Exp)),
