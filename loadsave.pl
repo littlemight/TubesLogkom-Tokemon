@@ -8,6 +8,7 @@ saveGame(FileName) :-
             writeMap,nl,
             writeInventory,
         told, !. 
+        
 writeMap:-
  forall(height(X),(write('height('), write(X),write(').'),nl)),
  forall(width(X),(write('width('),write(X),write(').'),nl)),

@@ -27,8 +27,8 @@ command(tokemonTingle).
 command(status(_)).
 command(status).
 command(listing).
-command(save(_)).
-command(load(_)).
+command(saveGame(_)).
+command(loadGame(_)).
 
 processInput(X) :- \+command(X), write('Invalid command!'), nl.
 processInput(X) :- command(X), X.
@@ -57,8 +57,8 @@ start :-
 	asserta(status(roam)),
     initMap,
     random(5, 10, N),
-    initPlayer,
     resetLvl,
+    initPlayer,
     initNormal(N),
     random(2, 4, NLegendary),
     initLegendary(NLegendary),

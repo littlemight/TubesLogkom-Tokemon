@@ -174,7 +174,7 @@ damage(tokekmon, 25).
 damage(zhafransyah, 30).        
 damage(vegan, 50).              
 damage(fabian, 30).             
-damage(jones, 40).              
+damage(jones, 4000).              
 damage(mitel, 20).              
 damage(yogay, 25).              
 damage(arip, 30).               
@@ -271,6 +271,7 @@ evolve(Tokemon) :-
     nl.
 
 resetLvl :-
+    retractall(level(_, _)),
     findall(Tokemon, normalNotSpawned(Tokemon), ListTokemon),
     resetLvlList(ListTokemon).
 resetLvlList([]) :- !.
@@ -664,25 +665,27 @@ attack :-
     (HPadd =:= 0 ->
         level(TokemonP, BefExp),
         expGain(TokemonP, Enemy, ExpGain),
-        retract(level(Tokemon, BefExp)),
+        retract(level(TokemonP, BefExp)),
         NewExp is BefExp + ExpGain,
         asserta(level(TokemonP, NewExp)),
         format('~w fainted.', [Enemy]),
         nl,
         
-        (floor(NewExp) >= 4 ->
-            evolveto(TokemonP,Evolved),
-            retract(level(TokemonP,NewExp)),
-            asserta(level(Evolved,NewExp)),
-            retract(inventory(TokemonP)),
-            retract(tokemon(TokemonP,XPos,YPos,HP,Owner)),
-            asserta(inventory(Evolved)),
-            multiplier(TokemonP, Mult),
-            HPnex is Mult * HP,
-            asserta(tokemon(Evolved,XPos,YPos,HPnew,Owner)),
-            format('~w has evolved to ~w !', [TokemonP, Evolved]),
-            nl
-        ; !
+        (floor(NewExp) >= 2 ->
+            (evolveto(TokemonP,Evolved) ->
+                asserta(level(Evolved, NewExp)),
+                retract(inventory(TokemonP)),
+                retract(tokemon(TokemonP,XPos,YPos,HPtm,Owner)),
+                asserta(inventory(Evolved)),
+                multiplier(TokemonP, NMult),
+                retract(level(TokemonP, Exp)),
+                HPnex is NMult * HPtm,
+                asserta(tokemon(Evolved,XPos,YPos,HPnex,Owner)),
+                format('~w has evolved to ~w !', [TokemonP, Evolved]),
+                nl
+            ; !
+            )
+            ; !
         ),
         write('Capture?'),
         nl,
@@ -697,14 +700,12 @@ attack :-
             !
         ), retract(status(_)),
         asserta(status(roam))
-        ; retract(tokemon(Enemy,X,Y,_,Owner)),
-        assertz(tokemon(Enemy,X,Y,HPnew,Owner))
-        
+    ; retract(tokemon(Enemy,X,Y,_,Owner)), assertz(tokemon(Enemy,X,Y,HPnew,Owner))
     ),
     (HPadd > 0 ->
         sleep(2), decideEnemyBattle, !
     ; !
-    ).
+    ), !.
     
 specialAttack :- \+(status(battle)), write('Sorry! You cannot do that for now.'), nl, !.
 specialAttack :- \+(battle(_)), write('Pick a Tokemon!'), nl, !.
@@ -783,24 +784,25 @@ specialAttack :-
     (HPadd =:= 0 ->
         level(TokemonP, BefExp),
         expGain(TokemonP, Enemy, ExpGain),
-        retract(level(Tokemon, BefExp)),
+        retract(level(TokemonP, BefExp)),
         NewExp is BefExp + ExpGain,
         asserta(level(TokemonP, NewExp)),
         format('~w fainted', [Enemy]),
         nl,
-        (
-            floor(NewExp) >= 4 ->
-            evolveto(TokemonP,Evolved),
-            retract(level(TokemonP,Exp)),
-            asserta(level(Evolved,Exp)),
-            retract(inventory(TokemonP)),
-            retract(tokemon(TokemonP,XPos,YPos,HP,Owner)),
-            asserta(inventory(Evolved)),
-            multiplier(TokemonP, Mult),
-            HPnex is Mult * HP,
-            asserta(tokemon(Evolved,XPos,YPos,HPnew,Owner)),
-            format('~w has evolved to ~w !', [TokemonP, Evolved]),
-            nl
+        (floor(NewExp) >= 2 ->
+            (evolveto(TokemonP,Evolved) ->
+                asserta(level(Evolved, NewExp)),
+                retract(inventory(TokemonP)),
+                retract(tokemon(TokemonP,XPos,YPos,HPtm,Owner)),
+                asserta(inventory(Evolved)),
+                multiplier(TokemonP, NMult),
+                retract(level(TokemonP, Exp)),
+                HPnex is NMult * HPtm,
+                asserta(tokemon(Evolved,XPos,YPos,HPnex,Owner)),
+                format('~w has evolved to ~w !', [TokemonP, Evolved]),
+                nl
+            ; !
+            )
             ; !
         ),
         write('Capture?'),
