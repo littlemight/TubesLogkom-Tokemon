@@ -160,7 +160,7 @@ type(cogan, ground).
 type(fabiun, water).
 type(jones2, ground).
 type(miteru, fire).
-type(magay, leaves),
+type(magay, leaves).
 type(pari, flying).
 type(mawut, ground).
 type(azab, water).
@@ -287,7 +287,7 @@ initNormal(N) :-
         (fence(X, Y) -> fail
         ; gym(X, Y) -> fail
         ; !
-        ),
+    ),
     findall(Tokemon, normalNotSpawned(Tokemon), ListTokemon),
     length(ListTokemon, LenListTokemon),
     random(0, LenListTokemon, Pick),
@@ -454,7 +454,7 @@ dTokemon(Tokemon) :-
 
 /* TOKEMON OUTPUTS  */
 status :-
-    findall(Tokemon, tokemon(Tokemon,_,_,_,1.0), ListTokemon),
+    findall(Tokemon, tokemon(Tokemon,_,_,_, 1), ListTokemon),
     write('Your Tokemons: '),
     nl,
     printStatus(ListTokemon),
@@ -669,6 +669,7 @@ attack :-
         asserta(level(TokemonP, NewExp)),
         format('~w fainted.', [Enemy]),
         nl,
+        
         (floor(NewExp) >= 4 ->
             evolveto(TokemonP,Evolved),
             retract(level(TokemonP,NewExp)),
@@ -677,7 +678,7 @@ attack :-
             retract(tokemon(TokemonP,XPos,YPos,HP,Owner)),
             asserta(inventory(Evolved)),
             multiplier(TokemonP, Mult),
-            HPnew is Mult * HP,
+            HPnex is Mult * HP,
             asserta(tokemon(Evolved,XPos,YPos,HPnew,Owner)),
             format('~w has evolved to ~w !', [TokemonP, Evolved]),
             nl
@@ -708,7 +709,7 @@ attack :-
 specialAttack :- \+(status(battle)), write('Sorry! You cannot do that for now.'), nl, !, fail.
 specialAttack :- \+(battle(_)), write('Pick a Tokemon!'), nl, !.
 specialAttack :- encounter(Tokemon), tokemon(Tokemon, _, _, HP, _), HP =:= 0, write('Have some mercy.'), nl, !.
-specialAttack :- battle(TokemonP), special(TokemonP), write('Special attacks can only be used once per battle!'), nl, !, fail.
+specialAttack :- battle(TokemonP), special(TokemonP), write('Special attacks can only be used once per battle!'), nl, !.
 specialAttack :-
     battle(TokemonP),
     encounter(Enemy),
@@ -764,7 +765,7 @@ specialAttack :-
         format('~w fainted', [Enemy]),
         nl,
         (
-            floor(Exp) >= 4 ->
+            floor(NewExp) >= 4 ->
             evolveto(TokemonP,Evolved),
             retract(level(TokemonP,Exp)),
             asserta(level(Evolved,Exp)),
@@ -772,7 +773,7 @@ specialAttack :-
             retract(tokemon(TokemonP,XPos,YPos,HP,Owner)),
             asserta(inventory(Evolved)),
             multiplier(TokemonP, Mult),
-            HPnew is Mult * HP,
+            HPnex is Mult * HP,
             asserta(tokemon(Evolved,XPos,YPos,HPnew,Owner)),
             format('~w has evolved to ~w !', [TokemonP, Evolved]),
             nl
