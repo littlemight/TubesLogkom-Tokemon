@@ -1,7 +1,7 @@
 :- dynamic(inventory/1). /* inventory(Tokemon), Tokemon ada di inventory player */
 :- dynamic(encounter/1). /* encounter(Tokemon), sekarang lagi ketemu Tokemon apa */
 :- dynamic(battle/1). /* battle(Tokemon), sekarang Tokemon apa yang kita pilih buat battle */
-:- dynamic(hasHealed/0).
+:- dynamic(hasHealed/2).
 
 starterNotSpawned(Tokemon) :- starter(Tokemon), \+(tokemon(Tokemon, _, _, _, _)).
 

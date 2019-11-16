@@ -178,7 +178,7 @@ damage(jones, 40).
 damage(mitel, 20).              
 damage(yogay, 25).              
 damage(arip, 30).               
-damage(laron, 1).               
+damage(laron, 1.0).               
 damage(azong, 35).              
 damage(tudecu, 30).             
 damage(pilbet, 30).             
@@ -244,7 +244,7 @@ expGain(Tokemon, Enemy, ExpGained) :-
         Mult is 2
     ;   Mult is 1
     ),
-    ExpGained is Mult*(1/(1 + 0.5* (Lvl - 1))).
+    ExpGained is Mult*(1/(1 + 0.5* (Lvl - 1.0))).
 
 multiplier(Tokemon, Multiplier) :-
     level(Tokemon, Lvl),
@@ -253,7 +253,7 @@ multiplier(Tokemon, Multiplier) :-
         RLvl is FLvl - 3 
     ;   RLvl is FLvl
     ),
-    Multiplier is (1.2)**(RLvl - 1).
+    Multiplier is (1.2)**(RLvl - 1.0).
 
 evolve(Tokemon) :- \+evolveto(_), write('waduh sorry gabisa gan !'), nl, !.
 evolve(Tokemon) :- level(Tokemon, X), X<4 , write('waduh sorry gabisa gan!'), nl, !.
@@ -454,7 +454,7 @@ dTokemon(Tokemon) :-
 
 /* TOKEMON OUTPUTS  */
 status :-
-    findall(Tokemon, tokemon(Tokemon,_,_,_,1), ListTokemon),
+    findall(Tokemon, tokemon(Tokemon,_,_,_,1.0), ListTokemon),
     write('Your Tokemons: '),
     nl,
     printStatus(ListTokemon),
@@ -548,7 +548,7 @@ capture :-
     format('~w is captured!', [Enemy]), nl,
     retract(tokemon(Enemy,X,Y,_,_)),
     maxHealth(Enemy, MaxHP),
-    asserta(tokemon(Enemy,X,Y,MaxHP,1)),
+    asserta(tokemon(Enemy,X,Y,MaxHP,1.0)),
     addTokemon(Enemy),
     retract(battle(_)),
     (\+legendaryRoaming(_) ->
@@ -769,7 +769,7 @@ specialAttack :-
     tokemon(Enemy,X,Y,HP,Ownership),
     printSpecialAttackMessage(TokemonP, Jurus), nl,
     write('.....'), nl,
-    sleep(1),
+    sleep(1.0),
     printPlayerDamage(AtkAtribut,Enemy),nl,
     retract(tokemon(Enemy, X, Y, HP, Ownership)),
     HPnew is HP - AtkAtribut,
@@ -935,7 +935,7 @@ enemySpecialAttack :-
     tokemon(TokemonP,X,Y,HP,Ownership),
     printSpecialAttackMessage(Enemy, Jurus), nl, 
     write('.....'), nl,
-    sleep(1),
+    sleep(1.0),
     printEnemyDamage(Enemy, AtkAtribut, TokemonP), nl,
     HPnew is HP - AtkAtribut,
     (HPnew < 0 ->
@@ -988,7 +988,7 @@ kalah :-
 menang :- 
     reset,
     write('JENG JENG JENG JENG '),nl,
-    sleep(1),
+    sleep(1.0),
     write('  __ __   ___   __ __      __    __  ____  ____       ______  __ __    ___       ____   ____  ___ ___    ___      __   '),nl,
     write(' |  |  | /   \\ |  |  |    |  |__|  ||    ||    \\     |      ||  |  |  /  _]     /    | /    ||   |   |  /  _]    |  | '),nl,
     write(' |  |  ||     ||  |  |    |  |  |  | |  | |  _  |    |      ||  |  | /  [_     |   __||  o  || _   _ | /  [_     |  | '),nl,
