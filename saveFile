@@ -1,0 +1,16 @@
+height(20).
+width(13).
+gym(1,11).
+fence(11,16).
+fence(2,5).
+fence(9,16).
+status(roam).
+posPlayer(9,12).
+tokemon(tudecu,11,12,50,1).
+tokemon(vegan,10,16,9,0).
+tokemon(bangkumon,6,13,2,0).
+tokemon(pilbet,10,17,90,0).
+tokemon(fabian,10,15,150,0).
+tokemon(arip,9,10,100,0).
+tokemon(mitel,9,12,70,0).
+inventory(tudecu).
