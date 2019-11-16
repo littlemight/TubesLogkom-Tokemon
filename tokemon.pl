@@ -1,4 +1,4 @@
-:- include('tools.pl').
+
 
 /* tokemon(NameTokemon, XPos, YPos, Health, Ownership) */
 /* Ownership = 0 -- Roaming
@@ -68,9 +68,9 @@ evolveto(jopan, jepun).
 
 /* starter tokemon */
 starter(jones).
-%starter(mitel).
-%starter(yoga).
-%starter(arip).
+starter(mitel).
+starter(yoga).
+starter(arip).
 
 /* level basic tokemon */
 level(mamon, 1.0).             
@@ -174,7 +174,7 @@ damage(tokekmon, 25).
 damage(zhafransyah, 30).        
 damage(vegan, 50).              
 damage(fabian, 30).             
-damage(jones, 4000).              
+damage(jones, 40).              
 damage(mitel, 20).              
 damage(yogay, 25).              
 damage(arip, 30).               
@@ -255,8 +255,8 @@ multiplier(Tokemon, Multiplier) :-
     ),
     Multiplier is (1.2)**(RLvl - 1.0).
 
-evolve(Tokemon) :- \+evolveto(_), write('waduh sorry gabisa gan !'), nl, !.
-evolve(Tokemon) :- level(Tokemon, X), X<4 , write('waduh sorry gabisa gan!'), nl, !.
+evolve(Tokemon) :- \+evolveto(_), write('You cannot do this for now!'), nl, !.
+evolve(Tokemon) :- level(Tokemon, X), X<4 , write('You cannot do this for now!'), nl, !.
 evolve(Tokemon) :- 
     retract(level(Tokemon, X)),
     X >= 4,

@@ -20,7 +20,8 @@ writeMap:-
 
 writeInventory:-
  forall(tokemon(A,B,C,D,E),(write('tokemon('),write(A),write(','),write(B),write(','),write(C),write(','),write(D),write(','),write(E),write(').'),nl)),
- forall(inventory(X),(write('inventory('),write(X),write(').'),nl)),!.
+ forall(inventory(X),(write('inventory('),write(X),write(').'),nl)),
+ forall(hasHealed(X,Y),(write('hasHealed('),write(X),write(','),write(Y),write(').'),nl)),!.
 
 writeLvl :-
     forall(level(Tokemon, Exp), (write('level('), write(Tokemon), write(','), write(Exp), write(').'), nl)), !.
