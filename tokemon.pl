@@ -73,20 +73,20 @@ starter(jones).
 %starter(arip).
 
 /* level basic tokemon */
-level(mamon,1.0).             
-level(tokekmon,1.0).          
-level(zhafransyah,1.0).       
-level(vegan,1.0).             
-level(fabian,1.0).            
-level(jones,1.0).             
-level(mitel,1.0).             
-level(yogay,1.0).             
-level(arip,1.0).              
-level(laron,1.0).             
-level(azong,1.0).             
-level(tudecu,1.0).            
-level(pilbet,1.0).            
-level(jopan,1.0).         
+level(mamon, 1.0).             
+level(tokekmon, 1.0).          
+level(zhafransyah, 1.0).       
+level(vegan, 1.0).             
+level(fabian, 1.0).            
+level(jones, 1.0).             
+level(mitel, 1.0).             
+level(yogay, 1.0).             
+level(arip, 1.0).              
+level(laron, 1.0).             
+level(azong, 1.0).             
+level(tudecu, 1.0).            
+level(pilbet, 1.0).            
+level(jopan, 1.0).         
 
 /* level evolved tokemon */
 level(kumon, 4.0).
@@ -578,76 +578,76 @@ attack :-
     (
         type(TokemonP, fire),type(Enemy, leaves) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, leaves),type(Enemy, water) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, water),type(Enemy, fire) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, flying),type(Enemy, ground) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, ground),type(Enemy, electric) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, electric),type(Enemy, flying) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, fire),type(Enemy, flying) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, flying),type(Enemy, leaves) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, leaves),type(Enemy, electric) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, electric),type(Enemy, water) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, water),type(Enemy, ground) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, ground),type(Enemy, fire) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk + Atk/2)
+            AtkAtribut is Mult * (Atk + Atk/2)
         ; type(TokemonP, leaves),type(Enemy, fire) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, water),type(Enemy, leaves) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, fire),type(Enemy, water) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, ground),type(Enemy, flying) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, electric),type(Enemy, ground) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, flying),type(Enemy, electric) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, flying),type(Enemy, fire) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, leaves),type(Enemy, flying) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, electric),type(Enemy, leaves) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, water),type(Enemy, electric) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, ground),type(Enemy, water) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk - Atk/2)
+            AtkAtribut is Mult * (Atk - Atk/2)
         ; type(TokemonP, fire),type(Enemy, ground) ->
             damage(TokemonP, Atk),
-            AtkAtribut is Lvl * (Atk - Atk/2)    
+            AtkAtribut is Mult * (Atk - Atk/2)    
         ; damage(TokemonP,Atk),
         AtkAtribut is Mult * Atk
     ),
