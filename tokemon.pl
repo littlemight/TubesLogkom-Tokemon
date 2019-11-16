@@ -272,7 +272,7 @@ evolve(Tokemon) :-
 
 resetLvl :-
     retractall(level(_, _)),
-    findall(Tokemon, normalNotSpawned(Tokemon), ListTokemon),
+    findall(Tokemon, evolveto(Tokemon, _), ListTokemon),
     resetLvlList(ListTokemon).
 resetLvlList([]) :- !.
 resetLvlList([H | T]) :-

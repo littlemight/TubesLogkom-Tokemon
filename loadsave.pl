@@ -7,6 +7,7 @@ saveGame(FileName) :-
         tell(FileName),
             writeMap,nl,
             writeInventory,
+            writeLvl,
         told, !. 
 
 writeMap:-
@@ -20,12 +21,16 @@ writeMap:-
 writeInventory:-
  forall(tokemon(A,B,C,D,E),(write('tokemon('),write(A),write(','),write(B),write(','),write(C),write(','),write(D),write(','),write(E),write(').'),nl)),
  forall(inventory(X),(write('inventory('),write(X),write(').'),nl)),!.
+
+writeLvl :-
+    forall(level(Tokemon, Exp), (write('level('), write(Tokemon), write(','), write(Exp), write(').'), nl)), !.
+
 loadGame(FileName):-
  \+file_exists(FileName),
  write('File not found :) .'), nl, !.
     
 loadGame(FileName):-
- reset,
+ reset, 
  open(FileName, read, Stream),
         readFileLines(Stream,Lines),
     close(Stream), assertaLine(Lines), asserta(init(1)), !.
