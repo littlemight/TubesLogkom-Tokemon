@@ -10,38 +10,46 @@ hesoyam :- visible, retract(visible), write('Now you\'re just a peasant Tokemon 
 
 initMap :- 
   /* Get Map Size */
-  random(10, 21, H),
-  random(10, 21, W),
+  random(10, 31, H),
+  random(10, 31, W),
   asserta(height(H)),
   asserta(width(W)),
 
   NRandom is ((H * W) div 15) + 1,
   random(1, NRandom, NFence),
-  write(NFence), nl,
   generateFence(NFence),
 
   /* Get Gym Position */
-  random(1, H, YGym),
-  random(1, W, XGym),
-  asserta(gym(XGym, YGym))
+  random(1, 4, NGymRandom),
+  generateGym(NGymRandom)
   .
 
 generateFence(0) :- !.
-generateFence(_) :-
-  height(H), width(W),
-  random(1, H, YFence), random(1, W, XFence),
-  fence(XFence, YFence), !.
-
 generateFence(N) :-
   height(H), width(W),
   repeat,
     random(1, H, YFence), random(1, W, XFence),
     (fence(XFence, YFence) -> fail
+    ; gym(XFence, YFence) -> fail
     ; asserta(fence(XFence, YFence)), !
     ),
   Next is N - 1,
   generateFence(Next),
   !.
+
+generateGym(0) :- !.
+generateGym(N) :-
+  height(H), width(W),
+  repeat,
+    random(1, H, YGym), random(1, W, XGym),
+    (gym(XGym, YGym) -> fail
+    ; fence(XGym, YGym) -> fail
+    ; asserta(gym(XGym, YGym)), !
+    ),
+  Next is N - 1,
+  generateGym(Next),
+  !.
+
 
 isEdgeW(_, Y) :- Y =:= 0, !.
 isEdgeA(X, _) :- X =:= 0, !.

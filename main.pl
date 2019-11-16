@@ -30,6 +30,7 @@ command(listing).
 
 processInput(X) :- \+command(X), write('Invalid command!'), nl.
 processInput(X) :- command(X), X.
+processInput(X) :- X = quit, halt, !.
 
 start :- status(_), write('You have already started the game!'),!, fail.
 start :-

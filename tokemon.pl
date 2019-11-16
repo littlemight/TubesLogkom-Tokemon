@@ -31,19 +31,28 @@ normal(azong).
 normal(tudecu).
 normal(pilbet).
 normal(jopan).
-
-%starter(jones).
+    
+starter(jones).
 %starter(mitel).
 %starter(yoga).
 %starter(arip).
-starter(laron).
+%starter(laron).
 
-maxHealth(bangkumon, 200).
+% tokemon evolve jadi apa
+evolveto(bangkumon, evolveBangkumon).
+% level tiap tokemon
+
+%changeTokemon(from) :-
+%    retract(tokemon(from, , , ,,)),
+%    evolveto(from, to),
+%    asserta(tokemon(to , ))
+    
+maxHealth(bangkumon, 200). maxHealth(evolveBangkumon, 500).
 maxHealth(mejamon, 500).
 maxHealth(zhafransyah, 1000).
 maxHealth(vegan, 90).
 maxHealth(fabian, 150).
-maxHealth(jones, 75).
+maxHealth(jones, 750).
 maxHealth(mitel, 120).
 maxHealth(yoga, 150).
 maxHealth(arip, 100).
@@ -73,7 +82,7 @@ damage(mejamon, 10).
 damage(zhafransyah, 50).
 damage(vegan, 10).
 damage(fabian, 15).
-damage(jones, 20).
+damage(jones, 2000).
 damage(mitel, 10).
 damage(yoga, 25).
 damage(arip, 30).
@@ -88,7 +97,7 @@ skill(mejamon, kebalik, 15).
 skill(zhafransyah, ruqyah, 150).
 skill(vegan, capcay, 1000).
 skill(fabian, berdoa, 50).
-skill(jones, breakdance, 35).
+skill(jones, breakdance, 3500).
 skill(mitel, danusan, 75).
 skill(yoga, muntah, 50).
 skill(arip, par, 35).

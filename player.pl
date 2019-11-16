@@ -86,6 +86,7 @@ pick(_) :- \+(encounter(_)), write('You\'re not in battle!'), nl, !.
 pick(Tokemon) :- battle(Tokemon), write('You already picked that Tokemon!'), nl, !.
 pick(Tokemon) :- 
     (inventory(Tokemon) ->
+        retractall(battle(_)),
         format('You : \"~w I choose you!\"', [Tokemon]), nl, nl,
         encounter(Enemy),
         printBattleStatus(Tokemon, Enemy),
