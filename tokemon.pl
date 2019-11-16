@@ -126,6 +126,14 @@ normalNotSpawned(Tokemon) :- normal(Tokemon), \+(tokemon(Tokemon, _, _, _, _)).
 legendaryNotSpawned(Tokemon) :- legendary(Tokemon), \+(tokemon(Tokemon, _, _, _, _)).
 legendaryRoaming(Tokemon) :- legendary(Tokemon), tokemon(Tokemon, _, _, _, 0).
 
+expGain(Tokemon, Enemy, ExpGained) :-
+    level(Tokemon, Lvl),
+    (legendary(Enemy) ->
+        Mult is 2
+    ;   Mult is 1
+    ),
+    ExpGained is Mult*(1/(1 + 0.5* (Lvl - 1))).
+
 evolve(Tokemon) :- \+evolveto(_), write('waduh sorry gabisa gan !'), nl, !.
 evolve(Tokemon) :- level(Tokemon, X), X<4 , write('waduh sorry gabisa gan!'), nl, !.
 evolve(Tokemon) :- 
