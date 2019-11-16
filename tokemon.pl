@@ -42,20 +42,20 @@ starter(mitel).
 starter(yoga).
 starter(arip).
 
-level(bangkumon,1).
-level(mejamon,1).
-level(zhafransyah,1).
-level(vegan,1).
-level(fabian,1).
-level(jones,1).
-level(mitel,1).
-level(yoga,1).
-level(arip,1).
-level(laron,1).
-level(azong,1).
-level(tudecu,1).
-level(pilbet,1).
-level(jopan,1).
+level(bangkumon,1.0).
+level(mejamon,1.0).
+level(zhafransyah,1.0).
+level(vegan,1.0).
+level(fabian,1.0).
+level(jones,1.0).
+level(mitel,1.0).
+level(yoga,1.0).
+level(arip,1.0).
+level(laron,1.0).
+level(azong,1.0).
+level(tudecu,1.0).
+level(pilbet,1.0).
+level(jopan,1.0).
 
 % tokemon evolve jadi apa
 evolveto(bangkumon, evolveBangkumon).
@@ -138,7 +138,11 @@ expGain(Tokemon, Enemy, ExpGained) :-
 multiplier(Tokemon, Multiplier) :-
     level(Tokemon, Lvl),
     FLvl is floor(Lvl),
-    Multiplier is (1.2)**(FLvl - 1).
+    (FLvl >= 4 ->
+        RLvl is FLvl - 3 
+    ;   RLvl is FLvl
+    ),
+    Multiplier is (1.2)**(RLvl - 1).
 
 evolve(Tokemon) :- \+evolveto(_), write('waduh sorry gabisa gan !'), nl, !.
 evolve(Tokemon) :- level(Tokemon, X), X<4 , write('waduh sorry gabisa gan!'), nl, !.
@@ -154,8 +158,6 @@ evolve(Tokemon) :-
     asserta(tokemon(Evolved,XPos,YPos,HPnew,Owner)),
     format('~w has evolved to ~w !', [Tokemon, Evolved]),
     nl.
-
-
 
 initNormal(0) :- !.
 initNormal(N) :-
@@ -347,6 +349,14 @@ printStatus([Tokemon|Tail]) :-
     type(Tokemon, Type),
     format('> ~w', [Tokemon]),
     nl,
+    (inventory(Tokemon) ->
+        level(Tokemon, Exp),
+        FLvl is floor(Exp),
+        write('Level : '),
+        write(FLvl),
+        nl
+    ; !
+    ),
     write('Health : '),
     write(HP),
     nl,
@@ -416,9 +426,9 @@ capture :-
     asserta(tokemon(Enemy,X,Y,MaxHP,1)),
     addTokemon(Enemy),
     retract(battle(_)),
-    (
-        \+legendaryRoaming(_) ->
+    (\+legendaryRoaming(_) ->
         menang
+    ;   !
     ),!.
 ignore :- \+(encounter(_)), write('You\'re not in battle!'), nl, !.
 ignore :- encounter(Enemy), tokemon(Enemy, _, _, HP, _), HP > 0, write('You have to defeat the Tokemon first!'), nl, !.
@@ -427,9 +437,9 @@ ignore :- /* ignore == mati */
     format('~w ran away.', [Enemy]), nl, 
     retract(tokemon(Enemy,_,_,_,_)),
     retract(battle(_)),
-    (
-        \+legendaryRoaming(_) ->
+    (\+legendaryRoaming(_) ->
         menang
+    ;   !
     ),!.
 
 % PLAYER
@@ -490,8 +500,7 @@ attack :-
     ),
     asserta(tokemon(Enemy, X, Y, HPadd, Ownership)),
     printBattleStatus(TokemonP, Enemy),
-    (
-        HPadd =:= 0 ->
+    (HPadd =:= 0 ->
         retract(level(TokemonP, Lvl)),
         (
             legendary(Enemy) ->
@@ -587,13 +596,14 @@ specialAttack :-
         nl,
         write('Capture?'),
         nl,
-        (
-            special(Enemy) ->
+        (special(Enemy) ->
             retract(special(Enemy))
-        ), retract(status(_)), asserta(status(roam)), retract(special(TokemonP))
-        ; retract(tokemon(Enemy,X,Y,_,Owner)),
-        assertz(tokemon(Enemy,X,Y,HPnew,Owner))
-        
+        ;   !
+        ),
+        retract(status(_)),
+        asserta(status(roam)),
+        retract(special(TokemonP))
+    ;   retract(tokemon(Enemy,X,Y,_,Owner)), assertz(tokemon(Enemy,X,Y,HPnew,Owner))
     ),
     (HPadd > 0 ->
         sleep(2), decideEnemyBattle, !

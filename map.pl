@@ -67,8 +67,8 @@ printPos(X, Y) :- gym(X, Y), !, write('G').
 printPos(X, Y) :- posPlayer(X, Y), !, write('P').
 printPos(X, Y) :- isEdge(X, Y), !, write('X').
 printPos(X, Y) :- fence(X, Y), !, write('X').
-printPos(X, Y) :- visible, tokemon(Tokemon, X, Y, _, _), normal(Tokemon), write('T').
-printPos(X, Y) :- tokemon(Tokemon, X, Y, _, _), legendary(Tokemon), write('L').
+printPos(X, Y) :- visible, tokemon(Tokemon, X, Y, _, 0), normal(Tokemon), write('T').
+printPos(X, Y) :- tokemon(Tokemon, X, Y, _, 0), legendary(Tokemon), write('L').
 printPos(_, _) :- write('-'), !.
 
 map :-
