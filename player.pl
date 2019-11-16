@@ -203,29 +203,31 @@ printInventory :-
     write(ListTokemon).
 
 heal :- 
-    hasHealed,
-    write('You have already healed your tokemon before!'),nl, !.
-heal :- 
     posPlayer(XPlayer, YPlayer), 
     \+(gym(XPlayer, YPlayer)),
     write('You are not in a gym! Go to a gym if you want to heal your tokemon :] '),
     nl,
     !.
+
 heal :-
     posPlayer(XPlayer, YPlayer),
     gym(XPlayer, YPlayer),
-    hasHealed,
-    write("You already used this gym!"), !.
-heal :-
-    asserta(hasHealed),
-    findall(Tokemon, inventory(Tokemon), ListTokemon),
-    healList(ListTokemon),
-    write('Your Tokemons have been healed!'), nl,
-    status, !.
+    (hasHealed(XPlayer, YPlayer) ->
+        write('You already used this gym!')
+    ;   asserta(hasHealed(XPlayer, YPlayer)),
+        findall(Tokemon, inventory(Tokemon), ListTokemon),
+        healList(ListTokemon),
+        write('Your Tokemons have been healed!'),
+        nl,
+        status,
+        !
+    ), !.
     
 healList([]):- !.
 healList([Tokemon|Tail]) :-
     maxHealth(Tokemon, MaxHP),
+    multiplier(Tokemon, Multiplier),
+    MaxHPByLvl is Multiplier*MaxHP,
     retract(tokemon(Tokemon, X, Y, _, _)),
-    asserta(tokemon(Tokemon, X, Y, MaxHP, 1)),
+    asserta(tokemon(Tokemon, X, Y, MaxHPByLvl, 1)),
     healList(Tail).
