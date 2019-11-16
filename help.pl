@@ -18,5 +18,6 @@ help :-
     write(' X - Wall'), nl,
     write(' P - Player'), nl,
     write(' G - Gym'), nl,
-    write(' T - Tokemon (Only Available in God Mode)'), nl.
+    write(' L - Legendary Tokemon'), nl,
+    write(' T - Normal Tokemon (Only Available in God Mode)'), nl.
 
