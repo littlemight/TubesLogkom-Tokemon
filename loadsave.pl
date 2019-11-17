@@ -3,12 +3,17 @@ saveGame(_) :-
  \+status(_),
  write('You must play the game to save'), nl, !.
 
+saveGame(_) :- status(battle), write('You cannot save the game while you are in a fight!'), nl, !.
+
+saveGame(_) :- battle(_), write('You cannot save the game while you are in a fight!'), nl, !.
+
 saveGame(FileName) :-
         tell(FileName),
             writeMap,nl,
             writeInventory,
             writeLvl,
         told, !. 
+
 
 writeMap:-
  forall(height(X),(write('height('), write(X),write(').'),nl)),
@@ -25,6 +30,8 @@ writeInventory:-
 
 writeLvl :-
     forall(level(Tokemon, Exp), (write('level('), write(Tokemon), write(','), write(Exp), write(').'), nl)), !.
+
+loadGame(_) :- status(_), write('You cannot load another game now!'),nl,!.
 
 loadGame(FileName):-
  \+file_exists(FileName),
