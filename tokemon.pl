@@ -67,10 +67,10 @@ evolveto(pilbet, pilbat).
 evolveto(jopan, jepun).
 
 /* starter tokemon */
-starter(jones).
+%starter(jones).
 starter(mitel).
-starter(yoga).
-starter(arip).
+%starter(yoga).
+%starter(arip).
 
 /* level basic tokemon */
 level(mamon, 1.0).             
@@ -175,7 +175,7 @@ damage(zhafransyah, 30).
 damage(vegan, 50).              
 damage(fabian, 30).             
 damage(jones, 40).              
-damage(mitel, 20).              
+damage(mitel, 2000).              
 damage(yogay, 25).              
 damage(arip, 30).               
 damage(laron, 1.0).               
@@ -191,7 +191,7 @@ damage(sultan, 60).
 damage(cogan, 100).
 damage(fabiun, 60).
 damage(jones2, 80).
-damage(miteru, 40).
+damage(miteru, 4000).
 damage(magay, 50).
 damage(pari, 60).
 damage(mawut, 5).
@@ -207,7 +207,7 @@ skill(zhafransyah, ruqyah, 75).
 skill(vegan, jamur, 150).           
 skill(fabian, berdoa, 70).          
 skill(jones, breakdance, 100).      
-skill(mitel, danusan, 50).          
+skill(mitel, danusan, 5000).          
 skill(yogay, muntah, 40).           
 skill(arip, par, 60).               
 skill(laron, nyampah, 10).          
@@ -223,7 +223,7 @@ skill(sultan, santet, 150).
 skill(cogan, capcay, 300).
 skill(fabiun, sembahyang, 140).
 skill(jones2, menggeliat, 200).
-skill(miteru, ntakntul, 100).
+skill(miteru, ntakntul, 10000).
 skill(magay, ngambang, 100).
 skill(pari, rap, 120).
 skill(mawut, mati, 20).
@@ -476,8 +476,10 @@ printStatus([Tokemon|Tail]) :-
         FLvl is floor(Exp),
         write('Level : '),
         write(FLvl),
-        Persen is floor((Exp - floor(Exp))*100),
-        write('('), write(Persen), write('% to the next level)'),
+        (FLvl < 5 ->
+            Persen is floor((Exp - floor(Exp))*100), write('('), write(Persen), write('% to the next level)')
+        ;   write('(Max!)')
+        ),
         nl
     ; !
     ),
@@ -664,12 +666,16 @@ attack :-
         level(TokemonP, BefExp),
         expGain(TokemonP, Enemy, ExpGain),
         retract(level(TokemonP, BefExp)),
-        NewExp is BefExp + ExpGain,
+        TmExp is BefExp + ExpGain,
+        (TmExp >= 5.0 ->
+            NewExp is 5.0
+        ;   NewExp is TmExp
+        ),
         asserta(level(TokemonP, NewExp)),
         format('~w fainted.', [Enemy]),
         nl,
         
-        (floor(NewExp) >= 2 ->
+        (floor(NewExp) >= 4 ->
             (evolveto(TokemonP,Evolved) ->
                 evolve(TokemonP, Evolved)
             ; !
@@ -774,11 +780,15 @@ specialAttack :-
         level(TokemonP, BefExp),
         expGain(TokemonP, Enemy, ExpGain),
         retract(level(TokemonP, BefExp)),
-        NewExp is BefExp + ExpGain,
+        TmExp is BefExp + ExpGain,
+        (TmExp >= 5.0 ->
+            NewExp is 5.0
+        ;   NewExp is TmExp
+        ),
         asserta(level(TokemonP, NewExp)),
         format('~w fainted', [Enemy]),
         nl,
-        (floor(NewExp) >= 2 ->
+        (floor(NewExp) >= 4 ->
             (evolveto(TokemonP,Evolved) ->
                 evolve(TokemonP, Evolved)
             ; !

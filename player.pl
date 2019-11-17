@@ -29,6 +29,7 @@ writeSouth :- write('You went South.'), nl.
 writeEast :- write('You went East.'), nl.
 writeWest :- write('You went West.'), nl.
 
+w :- encounter(_), write('Deal with the tokemon first. '), nl, !, fail.
 w :- \+status(roam), write('Sorry! You cannot do that for now. '), nl, !, fail.
 w :-
   retract(posPlayer(X, Y)),
@@ -40,6 +41,7 @@ w :-
     ;asserta(posPlayer(X, Y)), writeNabrak
   ), !.
 
+a :- encounter(_), write('Deal with the tokemon first. '), nl, !, fail.
 a :- \+status(roam),  write('Sorry! You cannot do that for now. '),nl,!, fail.
 a :-
   retract(posPlayer(X, Y)),
@@ -51,7 +53,7 @@ a :-
     ;asserta(posPlayer(X, Y)), writeNabrak
   ),
   !.
-
+s :- encounter(_), write('Deal with the tokemon first. '), nl, !, fail.
 s :- \+status(roam), write('Sorry! You cannot do that for now. '),nl,!, fail.
 s :-
   retract(posPlayer(X, Y)),
@@ -65,6 +67,7 @@ s :-
   ),
   !.
 
+d :- encounter(_), write('Deal with the tokemon first. '), nl, !, fail.
 d :- \+status(roam), write('Sorry! You cannot do that for now. '),nl,!, fail.
 d :-
   retract(posPlayer(X, Y)),
@@ -105,16 +108,20 @@ addTokemon(Tokemon) :-
     retract(tokemon(Tokemon, X, Y, Health, _)),
     asserta(tokemon(Tokemon, X, Y, Health, 1)).
 
-
 drop(Tokemon) :-
     (inventory(Tokemon) ->
-        retract(inventory(Tokemon)),
-        retract(tokemon(Tokemon, _, _, Health, _)),
-        posPlayer(XPlayer, YPlayer),
-        asserta(tokemon(Tokemon, XPlayer, YPlayer, Health, 0)),
-        (
-            \+inventory(_) ->
-            kalah
+        sizeInventory(Size),
+        (Size =:= 1 ->
+            write('Sorry you can\'t do that, it\'s the only tokemon you have!'), nl
+        ;   retract(inventory(Tokemon)),
+            retract(tokemon(Tokemon, _, _, Health, _)),
+            posPlayer(XPlayer, YPlayer),
+            asserta(tokemon(Tokemon, XPlayer, YPlayer, Health, 0)),
+            format('You let ~w go back to nature...', [Tokemon]), nl,  
+            (\+inventory(_) ->
+                kalah
+            ; !
+            )
         )
     ; write('You cannot drop a Tokemon you do not have! '),nl
     ).
