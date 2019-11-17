@@ -214,6 +214,26 @@ Mencetak isi petak (X, Y)
 Mencetak keseluruhan isi peta
 
 ## loadsave.pl
+### saveGame(FileName)
+Menyimpan progress game ke dalam sebuah file 'FileName'
+
+### writeMap
+Menuliskan ukuran peta, status, dan posisi player pada game yang sedang dimainkan
+
+### writeInventory
+Menuliskan Tokemon, inventory dan status heal gym pada game yang sedang dimainkan
+
+### writeLvl
+Menuliskan level dari tokemon dalam game yang sedang dimainkan
+
+### loadGame(FileName)
+Me-load game yang sudah disave sebelumnya ke dalam sebuah file 'FileName;
+
+### assertaLine
+Mengambil baris yang ada di file dan dijadikan fakta
+
+### readFileLines
+Membaca data dalam sebuah file dalam bentuk baris
 
 ## compass.pl
 ### tokemonTingle
