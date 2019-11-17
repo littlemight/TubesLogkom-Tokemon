@@ -163,7 +163,7 @@ run :-
             special(Tokemon) ->
             retract(special(Tokemon))
         ),
-        retract(hasRun)
+        retractall(hasRun)
     ;   asserta(hasRun), write('You failed to run!'), nl, decideEnemyBattle
     ), !.
 
@@ -179,7 +179,7 @@ run :-
             special(Tokemon) ->
             retract(special(Tokemon))
         ),
-        retract(hasRun)
+        retractall(hasRun)
     ;   asserta(hasRun), write('You failed to run!'), nl, decideEnemyBattle
     ).
 
