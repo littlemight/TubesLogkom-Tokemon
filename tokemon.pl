@@ -257,17 +257,15 @@ multiplier(Tokemon, Multiplier) :-
 
 evolve(Tokemon) :- \+evolveto(_), write('You cannot do this for now!'), nl, !.
 evolve(Tokemon) :- level(Tokemon, X), X<4 , write('You cannot do this for now!'), nl, !.
-evolve(Tokemon) :- 
-    retract(level(Tokemon, X)),
-    X >= 4,
-    evolveto(Tokemon,Evolved),
-    asserta(level(Evolved,X)),
-    retract(inventory(Tokemon)),
-    retract(tokemon(Tokemon,XPos,YPos,HP,Owner)),
+evolve(TokemonP, Evolved) :- 
+    retract(level(TokemonP, NewExp)),
+    asserta(level(Evolved, NewExp)),
+    retract(inventory(TokemonP)),
+    retract(tokemon(TokemonP,XPos,YPos,_,Owner)),
     asserta(inventory(Evolved)),
-    HPnew is 2 * HP,
-    asserta(tokemon(Evolved,XPos,YPos,HPnew,Owner)),
-    format('~w has evolved to ~w !', [Tokemon, Evolved]),
+    maxHealth(Evolved, HPnex),
+    asserta(tokemon(Evolved,XPos,YPos,HPnex,Owner)),
+    format('~w has evolved to ~w !', [TokemonP, Evolved]),
     nl.
 
 resetLvl :-
@@ -673,16 +671,7 @@ attack :-
         
         (floor(NewExp) >= 2 ->
             (evolveto(TokemonP,Evolved) ->
-                asserta(level(Evolved, NewExp)),
-                retract(inventory(TokemonP)),
-                retract(tokemon(TokemonP,XPos,YPos,HPtm,Owner)),
-                asserta(inventory(Evolved)),
-                multiplier(TokemonP, NMult),
-                retract(level(TokemonP, Exp)),
-                HPnex is NMult * HPtm,
-                asserta(tokemon(Evolved,XPos,YPos,HPnex,Owner)),
-                format('~w has evolved to ~w !', [TokemonP, Evolved]),
-                nl
+                evolve(TokemonP, Evolved)
             ; !
             )
             ; !
@@ -791,16 +780,7 @@ specialAttack :-
         nl,
         (floor(NewExp) >= 2 ->
             (evolveto(TokemonP,Evolved) ->
-                asserta(level(Evolved, NewExp)),
-                retract(inventory(TokemonP)),
-                retract(tokemon(TokemonP,XPos,YPos,HPtm,Owner)),
-                asserta(inventory(Evolved)),
-                multiplier(TokemonP, NMult),
-                retract(level(TokemonP, Exp)),
-                HPnex is NMult * HPtm,
-                asserta(tokemon(Evolved,XPos,YPos,HPnex,Owner)),
-                format('~w has evolved to ~w !', [TokemonP, Evolved]),
-                nl
+                evolve(TokemonP, Evolved)
             ; !
             )
             ; !
