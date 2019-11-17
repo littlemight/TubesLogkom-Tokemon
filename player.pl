@@ -2,6 +2,7 @@
 :- dynamic(encounter/1). /* encounter(Tokemon), sekarang lagi ketemu Tokemon apa */
 :- dynamic(battle/1). /* battle(Tokemon), sekarang Tokemon apa yang kita pilih buat battle */
 :- dynamic(hasHealed/2).
+:- dynamic(hasRun/0).
 
 starterNotSpawned(Tokemon) :- starter(Tokemon), \+(tokemon(Tokemon, _, _, _, _)).
 
@@ -148,6 +149,7 @@ checkEncounter :-
     asserta(status(battle)),
     asserta(encounter(NameTokemon)), !.
 
+run :- hasRun, write('You already tried to run, coward.'), nl, !.
 run :- \+(encounter(_)), write('You\'re not facing a Tokemon!'), nl, !.
 run :-
     encounter(Tokemon),
@@ -160,8 +162,9 @@ run :-
         (
             special(Tokemon) ->
             retract(special(Tokemon))
-        )
-    ;   write('You failed to run!'), nl, decideEnemyBattle
+        ),
+        retract(hasRun)
+    ;   asserta(hasRun), write('You failed to run!'), nl, decideEnemyBattle
     ), !.
 
 run :-
@@ -175,8 +178,9 @@ run :-
         (
             special(Tokemon) ->
             retract(special(Tokemon))
-        )
-    ;   write('You failed to run!'), nl, decideEnemyBattle
+        ),
+        retract(hasRun)
+    ;   asserta(hasRun), write('You failed to run!'), nl, decideEnemyBattle
     ).
 
 run :-
