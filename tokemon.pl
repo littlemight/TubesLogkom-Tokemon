@@ -175,7 +175,7 @@ damage(zhafransyah, 30).
 damage(vegan, 50).              
 damage(fabian, 30).             
 damage(jones, 40).              
-damage(mitel, 2000).              
+damage(mitel, 20).              
 damage(yogay, 25).              
 damage(arip, 30).               
 damage(laron, 1.0).               
@@ -191,7 +191,7 @@ damage(sultan, 60).
 damage(cogan, 100).
 damage(fabiun, 60).
 damage(jones2, 80).
-damage(miteru, 4000).
+damage(miteru, 40).
 damage(magay, 50).
 damage(pari, 60).
 damage(mawut, 5).
@@ -207,7 +207,7 @@ skill(zhafransyah, ruqyah, 75).
 skill(vegan, jamur, 150).           
 skill(fabian, berdoa, 70).          
 skill(jones, breakdance, 100).      
-skill(mitel, danusan, 5000).          
+skill(mitel, danusan, 50).          
 skill(yogay, muntah, 40).           
 skill(arip, par, 60).               
 skill(laron, nyampah, 10).          
@@ -223,7 +223,7 @@ skill(sultan, santet, 150).
 skill(cogan, capcay, 300).
 skill(fabiun, sembahyang, 140).
 skill(jones2, menggeliat, 200).
-skill(miteru, ntakntul, 10000).
+skill(miteru, ntakntul, 100).
 skill(magay, ngambang, 100).
 skill(pari, rap, 120).
 skill(mawut, mati, 20).
@@ -570,7 +570,7 @@ ignore :- /* ignore == mati */
 
 % PLAYER
 attack :- \+status(battle), write('Sorry! You cannot do that for now. '), nl,!, fail.
-attack :- \+(battle(_)), write('Pick a Tokemon!'), !.
+attack :- \+(battle(_)), write('You cannot do this for now!'), !.
 attack :- encounter(Tokemon), tokemon(Tokemon, _, _, HP, _), HP =:= 0, write('Have some mercy.'), nl, !.
 attack :-
     battle(TokemonP),
@@ -703,7 +703,7 @@ attack :-
     ), !.
     
 specialAttack :- \+(status(battle)), write('Sorry! You cannot do that for now.'), nl, !.
-specialAttack :- \+(battle(_)), write('Pick a Tokemon!'), nl, !.
+specialAttack :- \+(battle(_)), write('You cannot do this for now!'), nl, !.
 specialAttack :- encounter(Tokemon), tokemon(Tokemon, _, _, HP, _), HP =:= 0, write('Have some mercy.'), nl, !.
 specialAttack :- battle(TokemonP), special(TokemonP), write('Special attacks can only be used once per battle!'), nl, !.
 specialAttack :-
