@@ -14,4 +14,5 @@ reset :-
     retractall(fence(_, _)),
     retractall(posPlayer(_, _)),
     retractall(status(_)),
-    retractall(level(_, _)).
+    retractall(level(_, _)),
+    retractall(special(_)).
