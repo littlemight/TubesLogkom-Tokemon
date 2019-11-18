@@ -67,10 +67,10 @@ evolveto(pilbet, pilbat).
 evolveto(jopan, jepun).
 
 /* starter tokemon */
-%starter(jones).
+starter(jones).
 starter(mitel).
-%starter(yoga).
-%starter(arip).
+starter(yogay).
+starter(arip).
 
 /* level basic tokemon */
 level(mamon, 1.0).             
@@ -185,20 +185,20 @@ damage(pilbet, 30).
 damage(jopan, 50).      
 
 /* attack evolved tokemon */
-damage(kumon, 60).
-damage(tokaimon, 50).
-damage(sultan, 60).
-damage(cogan, 100).
-damage(fabiun, 60).
-damage(jones2, 80).
-damage(miteru, 40).
-damage(magay, 50).
-damage(pari, 60).
-damage(mawut, 5).
-damage(azab, 70).
-damage(paranicu, 60).
-damage(pilbat, 60).
-damage(jepun, 100).
+damage(kumon, 75).
+damage(tokaimon, 65).
+damage(sultan, 75).
+damage(cogan, 125).
+damage(fabiun, 75).
+damage(jones2, 100).
+damage(miteru, 100).
+damage(magay, 65).
+damage(pari, 75).
+damage(mawut, 7).
+damage(azab, 90).
+damage(paranicu, 75).
+damage(pilbat, 75).
+damage(jepun, 125).
 
 /* specialAttack basic tokemon */ 
 skill(mamon, sesajen, 60).          
@@ -255,8 +255,6 @@ multiplier(Tokemon, Multiplier) :-
     ),
     Multiplier is (1.2)**(RLvl - 1.0).
 
-evolve(Tokemon) :- \+evolveto(_), write('You cannot do this for now!'), nl, !.
-evolve(Tokemon) :- level(Tokemon, X), X<4 , write('You cannot do this for now!'), nl, !.
 evolve(TokemonP, Evolved) :- 
     retract(level(TokemonP, NewExp)),
     asserta(level(Evolved, NewExp)),
@@ -300,8 +298,12 @@ initLegendary(0) :- !.
 initLegendary(N) :-
     height(H),
     width(W),
-    random(1, W, X),
-    random(1, H, Y),
+    repeat,
+        random(1, H, Y), random(1, W, X),
+        (fence(X, Y) -> fail
+        ; gym(X, Y) -> fail
+        ; !
+    ),
     findall(Tokemon, legendaryNotSpawned(Tokemon), ListTokemon),
     length(ListTokemon, LenListTokemon),
     random(0, LenListTokemon, Pick),
@@ -991,6 +993,6 @@ menang :-
     write(' |____/  \\___/  \\__,_|      \\_/\\_/  |____||__|__|      |__|  |__|__||_____|    |___,_||__|__||___|___||_____|    |__| '),nl,
                                                                                                                     
 
-    write('Congratulations !! Write start if you want to play again!! '),!.
+    write('Congratulations !! Write start if you want to play again!! '), nl, !.
 
 
